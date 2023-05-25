@@ -1,0 +1,96 @@
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require("discord.js");
+const os = require("os");
+const { version } = require("discord.js");
+const { codeBlock } = require("@discordjs/builders");
+const { DurationFormatter } = require("@sapphire/time-utilities");
+const durationFormatter = new DurationFormatter();
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("stats")
+    .setDescription("Bot Statistics"),
+  category: "Admins",
+  utilisation: "/stats",
+
+  async execute(client, interaction) {
+    const promises = [
+      client.shard.fetchClientValues("guilds.cache.size"),
+      client.shard.broadcastEval((c) =>
+        c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
+      ),
+      client.shard.fetchClientValues("voice.adapters.size"),
+      client.shard.fetchClientValues("ws.ping"),
+    ];
+
+    Promise.all(promises)
+      .then((results) => {
+        const totalGuilds = results[0].reduce(
+          (acc, guildCount) => acc + guildCount,
+          0
+        );
+        const totalMembers = results[1].reduce(
+          (acc, memberCount) => acc + memberCount,
+          0
+        );
+        const totalVoice = results[2].reduce((a, b) => a + b, 0);
+
+        const duration = durationFormatter.format(client.uptime, `1`);
+        const stats = codeBlock(
+          "asciidoc",
+          `
+• Mem Usage      ::     ${(
+            process.memoryUsage().heapUsed /
+            1024 /
+            1024
+          ).toFixed(2)} MB
+• Channels       ::     ${client.channels.cache.size.toLocaleString()}
+• Discord.js     ::     v${version}
+• Node           ::     ${process.version}`
+        );
+        const statsEmbed = new EmbedBuilder()
+          .setColor("Random")
+          .setTitle("<:stats:889018165357576264> • Beats Statistics")
+          .addFields(
+            {
+              name: "Server count",
+              value: `\`\`\`yaml\n${totalGuilds}\`\`\``,
+              inline: true,
+            },
+            {
+              name: "Total Users",
+              value: `\`\`\`yaml\n${totalMembers}\`\`\``,
+              inline: true,
+            },
+            {
+              name: "Ping",
+              value: `\`\`\`yaml\n${Math.round(client.ws.ping)} ms\`\`\``,
+              inline: true,
+            },
+            {
+              name: "Server info",
+              value: `\`\`\`yaml\nCores : ${os.cpus().length}⠀\`\`\``,
+              inline: true,
+            },
+            {
+              name: "Uptime",
+              value: `\`\`\`yaml\n${duration}\`\`\``,
+              inline: true,
+            },
+            {
+              name: "Connected voice Channels",
+              value: `\`\`\`yaml\n${totalVoice}\`\`\``,
+              inline: true,
+            }
+          );
+        if (
+          interaction.member.id === "746568635115634759" ||
+          interaction.member.id === "891581154765979668"
+        ) {
+          statsEmbed.addFields({ name: "More", value: stats });
+        }
+        interaction.reply({ embeds: [statsEmbed] });
+      })
+      .catch(console.error);
+  },
+};

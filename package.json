@@ -1,0 +1,42 @@
+{
+  "name": "beats-v3.0.0",
+  "main": "main.js",
+  "author": "Chinmay Ajith",
+  "version": "3.0.0",
+  "repository": "https://github.com/chimnayajith",
+  "description": "The perfect music bot for your discord server",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@discord-player/downloader": "^3.0.1",
+    "@discord-player/extractor": "^4.2.0",
+    "@discordjs/opus": "^0.8.0",
+    "@discordjs/rest": "^0.3.0",
+    "@distube/ytdl-core": "^4.11.7",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@sapphire/time-utilities": "^1.6.0",
+    "discord-api-types": "^0.26.1",
+    "discord-player": "^6.3.0",
+    "discord-together": "^1.3.0",
+    "discord-ytdl-core": "^5.0.4",
+    "discord.js": "^14.11.0",
+    "ffmpeg-static": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "genius-lyrics": "^4.3.5",
+    "got": "^12.0.1",
+    "js-abbreviation-number": "^1.4.0",
+    "math": "^0.0.3",
+    "millify": "^4.0.0",
+    "mongodb": "^4.7.0",
+    "mongoose": "^6.0.11",
+    "ms": "^3.0.0-canary.1",
+    "node-fetch": "^2.6.7",
+    "play-dl": "^1.8.6",
+    "pretty-ms": "^7.0.1",
+    "prism-media": "^1.3.4",
+    "scrape-yt": "^1.4.8",
+    "spotify-url-info": "^3.2.3",
+    "ytdl-core": "https://github.com/khlevon/node-ytdl-core.git#v4.11.4-patch.1"
+  }
+}

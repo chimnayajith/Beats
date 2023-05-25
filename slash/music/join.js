@@ -1,0 +1,27 @@
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { EmbedBuilder } = require("discord.js");
+const { joinVoiceChannel } = require("@discordjs/voice");
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("join")
+    .setDescription("Joins your voice channel"),
+  category: "Music",
+  utilisation: "/join",
+
+  async execute(client, interaction) {
+    joinVoiceChannel({
+      channelId: interaction.member.voice.channel.id,
+      guildId: interaction.channel.guild.id,
+      adapterCreator: interaction.channel.guild.voiceAdapterCreator,
+      leaveOnEmpty: true,
+    });
+
+    const joinembed = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(
+        `<a:tick:889018326255288360>⠀ | ⠀Joined voice channel <#${interaction.member.voice.channel.id}>`
+      );
+    interaction.reply({ embeds: [joinembed] });
+  },
+};
