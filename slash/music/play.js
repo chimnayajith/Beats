@@ -47,7 +47,5 @@ module.exports = {
     const loadingTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:loading:889018179471441941>⠀ | ⠀Loading your ${searchResult.playlist ? "playlist" : "track"}...`);
     interaction.editReply({ embeds: [loadingTrack] })
                .then((interaction) => setTimeout(() => interaction.delete(), 15000));
-
-    searchResult.playlist ? queue.addTrack(searchResult.tracks): queue.addTrack(searchResult.tracks[0]);
   },
 };
