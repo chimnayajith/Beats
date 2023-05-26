@@ -8,6 +8,7 @@ const {
 const playlists = require("../../models/playlist");
 const pretty = require("pretty-ms");
 const { QueryType } = require("discord-player");
+const playerOptions  = client.config.opt.discordPlayer;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -223,13 +224,7 @@ module.exports = {
                     interaction : interaction,
                     playlist:true
                    },
-                   volume: 50,
-                   selfDeaf: true,
-                   leaveOnEmpty: true,
-                   leaveOnEmptyCooldown: 10000,
-                   leaveOnEnd: true,
-                   leaveOnEndCooldown: 10000,
-                   
+                   playerOptions
                   },
               });
               }
@@ -355,12 +350,7 @@ module.exports = {
                         interaction : interaction,
                         playlist:true
                        },
-                     volume: 50,
-                     selfDeaf: true,
-                     leaveOnEmpty: true,
-                     leaveOnEmptyCooldown: 10000,
-                     leaveOnEnd: true,
-                     leaveOnEndCooldown: 10000,
+                     playerOptions,
                     },
                 });
                 }

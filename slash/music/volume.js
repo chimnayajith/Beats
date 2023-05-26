@@ -9,12 +9,12 @@ module.exports = {
     .addIntegerOption((option) =>
       option
         .setName("volume")
-        .setDescription("Volume of track [1 - 100]")
+        .setDescription("Volume of track [1 - 200]")
         .setRequired(false)
     ),
   voiceChannel: true,
   category: "Music",
-  utilisation: "/volume <1-100>",
+  utilisation: "/volume <1-200>",
 
   async execute(client, interaction) {
     const volume = interaction.options.get("volume");
@@ -36,8 +36,8 @@ module.exports = {
       const vol = parseInt(volume.value);
       
       const alreadySet = new EmbedBuilder().setColor("#2f3136").setDescription(`:loud_sound: ⠀|⠀ Volume already set at **${queue.node.volume}**`);
-      const invalidVolume = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Enter a valid number between *1* and *100* **`);
-      const volumeSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360> ⠀|⠀ Volume set to **${vol}/100**`);
+      const invalidVolume = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Enter a valid number between *1* and *200* **`);
+      const volumeSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360> ⠀|⠀ Volume set to **${vol}%**`);
       const errorEmbed = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Something went wrong..Try Again**`);
 
       if (queue.node.volume === vol)
