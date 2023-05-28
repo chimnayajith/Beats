@@ -52,7 +52,7 @@ module.exports = {
       let embed = new EmbedBuilder()
         .setTitle("<:help1:900708695829250120> • HELP MENU")
         .setDescription(
-          "Unleash the rhythm and elevate your Discord server with **Beats**, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community. \n\n**[Website](https://beatsbot.in)**  |  **[Docs](https://beatsbot.in/commands)**  |  **[Invite](https://discord.com/api/oauth2/authorize?client_id=886801342239211522&permissions=2184529984&scope=bot%20applications.commands)**  |  **[Support](https://discord.gg/JRRZmdFGmq)**\n\nChoose Command Category.⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "Unleash the rhythm and elevate your Discord server with **Beats**, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community. \n\n**[Website](https://beatsbot.in)**  |  **[Commands](https://dashboard.beatsbot.in/commands)**  |  **[Invite](https://discord.com/api/oauth2/authorize?client_id=886801342239211522&permissions=2184529984&scope=bot%20applications.commands)**  |  **[Support](https://discord.gg/JRRZmdFGmq)**\n\nChoose Command Category.⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
         )
         .setColor("#2f3136")
         .setThumbnail(

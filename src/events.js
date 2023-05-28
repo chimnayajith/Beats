@@ -49,10 +49,10 @@ player.events.on("playerStart", (queue, track) => {
     queue.metadata.interaction.channel.send({ embeds: [embed1] }) ||
       queue.connection.channel
         .send({ embeds: [embed1] })
-        .then((message) => setTimeout(() => message.delete(), 20000));
+        .then((message) => setTimeout(() => message.delete(), 240000));
   } else {
-    queue.metadata.interaction.channel.send({ embeds: [embed1] }) ||
-      queue.connection.channel.send({ embeds: [embed1] });
+    queue.metadata.interaction.channel.send({ embeds: [embed1] }).then((message) => setTimeout(() => message.delete(), 240000)) ||
+      queue.connection.channel.send({ embeds: [embed1] }).then((message) => setTimeout(() => message.delete(), 240000));
   }
 });
 
@@ -71,8 +71,8 @@ player.events.on("audioTrackAdd", (queue, track) => {
     );
 
   if (queue.node.isPlaying()) {
-    queue.metadata.interaction.channel.send({ embeds: [trackAdd] }) ||
-      queue.connection.channel.send({ embeds: [trackAdd] });
+    queue.metadata.interaction.channel.send({ embeds: [trackAdd] }).then((message) => setTimeout(() => message.delete(), 20000)) ||
+      queue.connection.channel.send({ embeds: [trackAdd] }).then((message) => setTimeout(() => message.delete(), 20000));
   }
 });
 
@@ -97,7 +97,7 @@ player.events.on("audioTracksAdd", (queue, tracks) => {
         inline: true,
       }
     );
-  queue.metadata.interaction.channel.send({ embeds: [tracksAdd] }) ||
+  queue.metadata.interaction.channel.send({ embeds: [tracksAdd] }).then((message) => setTimeout(() => message.delete(), 20000)) ||
     queue.connection.channel.send({ embeds: [tracksAdd] });
 });
 
@@ -108,8 +108,8 @@ const disconnect1 = new EmbedBuilder()
 player.events.on("disconnect", (queue) => {
   queue.node.pause();;
   queue.delete();
-  queue.metadata.interaction.channel.send({ embeds: [disconnect1] }) ||
-    queue.connection.channel.send({ embeds: [disconnect1] });
+  queue.metadata.interaction.channel.send({ embeds: [disconnect1] }).then((message) => setTimeout(() => message.delete(), 20000)) ||
+    queue.connection.channel.send({ embeds: [disconnect1] }).then((message) => setTimeout(() => message.delete(), 20000)) ;
 });
 
 //Empty voice channel

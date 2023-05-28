@@ -35,7 +35,7 @@ module.exports = {
         { name: "Duration", value: `\`${track.duration}\``, inline: true },
         {
           name: "Requested by",
-          value: `<@${track.requestedBy.id}>`,
+          value: `<@${track.requestedBy?.id}>`,
           inline: true,
         },
         {

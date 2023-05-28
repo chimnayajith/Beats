@@ -31,13 +31,13 @@ module.exports = {
 
     const autoplay = new EmbedBuilder()
       .setColor("#2f3136")
-      .setDescription(`**❌⠀ | ⠀Autoplay Mode enabled**`);
+      .setDescription(`**<a:warn:889018313143894046>⠀ | ⠀Autoplay Mode enabled**`);
     if (queue.repeatMode == 3)
       return interaction.reply({ embeds: [autoplay], ephemeral: true });
 
     const embed4 = new EmbedBuilder()
       .setColor("#2f3136")
-      .setDescription(`**❌ ⠀|⠀ Only one song in the queue**`);
+      .setDescription(`**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`);
     if (!queue.tracks.toArray()[0])
       return interaction.reply({ embeds: [embed4], ephemeral: true });
 

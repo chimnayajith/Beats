@@ -15,7 +15,7 @@ module.exports = {
 
     if (!queue || !queue.node.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
-    const oneSong = new EmbedBuilder().setColor("#2f3136").setDescription(`**❌ ⠀|⠀ Only one song in the queue**`);
+    const oneSong = new EmbedBuilder().setColor("#2f3136").setDescription(`**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`);
     if (!queue.tracks.toArray()[0]) return interaction.reply({ embeds: [oneSong], ephemeral: true });
 
     await queue.tracks.clear();
