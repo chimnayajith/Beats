@@ -25,7 +25,6 @@ module.exports = {
       .setDescription(
         `<a:tick:889018326255288360>⠀ | ⠀Beats has been \`disconnected\`.`
       );
-      console.log(queue)
     if (queue) {
       try {
         queue.node.pause();

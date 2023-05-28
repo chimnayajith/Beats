@@ -22,12 +22,11 @@ module.exports = async (client, guild) => {
 
   }).then(() =>{
     const fs = require('fs');
-    fs.readFile('stats/stats.json', 'utf8', (error, data) => {
+    fs.readFile('stats/stats.json', 'utf8', async(error, data) => {
     const jsonData = JSON.parse(data);
     const totalGuilds = jsonData.totalGuilds;
     const totalMembers = jsonData.totalMembers;
-    
-    stats.findOneAndUpdate(
+    await stats.findOneAndUpdate(
       { 
         _id : "bot_stats"
       }, 

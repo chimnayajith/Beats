@@ -13,14 +13,12 @@ module.exports = {
           { name: "Off", value: "off" },
           { name: "Track", value: "track" },
           { name: "Queue", value: "queue" },
-          { name: "Autoplay", value: "autoplay" }
         )
         .setRequired(true)
     ),
   voiceChannel: true,
-  vote: true,
   category: "Music",
-  utilisation: "/loop <option>",
+  utilisation: "/loop [off/track/queue]",
 
   async execute(client, interaction) {
     const input = interaction.options.get("option").value;
@@ -33,11 +31,9 @@ module.exports = {
     const trackUnlooped = new EmbedBuilder().setColor("#2f3136").setDescription("<a:onoff:889018175721717781>⠀|⠀Current Track : Loop mode **disabled**");
     const queueLooped = new EmbedBuilder().setColor("#2f3136").setDescription("<a:onoff:889018175721717781>⠀|⠀Queue : Loop mode **enabled**");
     const queueUnlooped = new EmbedBuilder().setColor("#2f3136").setDescription("<a:onoff:889018175721717781>⠀|⠀Queue : Loop mode **disabled**");
-    const autoplayEnabled = new EmbedBuilder().setColor("#2f3136").setDescription("<a:onoff:889018175721717781>⠀|⠀Autoplay **enabled**");
-    const autoplayDisabled = new EmbedBuilder().setColor("#2f3136").setDescription("<a:onoff:889018175721717781>⠀|⠀Autoplay **disabled**");
     const errorEmbed = new EmbedBuilder().setColor("#2f3136").setDescription("<a:warn:889018313143894046>⠀|⠀Something went wrong.Try again");
 
-    if (!queue) return interaction.reply({ embeds: [noMusic] });
+    if (!queue) return interaction.reply({ embeds: [noMusic] , ephemeral:true});
 
     if (input === "off") {
       if (queue.repeatMode !== 0) {
@@ -48,10 +44,6 @@ module.exports = {
         if (queue.repeatMode === 2) {
           queue.setRepeatMode(0);
           interaction.reply({ embeds: [queueUnlooped] });
-        }
-        if (queue.repeatMode === 3) {
-          queue.setRepeatMode(0);
-          interaction.reply({ embeds: [autoplayDisabled] });
         }
       } else {
         interaction.reply({ embeds: [noLoops], ephemeral: true });
@@ -65,9 +57,6 @@ module.exports = {
     } else if ( input === 'queue'){
       queue.setRepeatMode(2);
       interaction.reply({ embeds : [queueLooped]});
-    } else if ( input === 'autoplay') {
-      queue.setRepeatMode(3);
-      interaction.reply({ embeds : [autoplayEnabled]});
-    }
+    } 
   },
 };

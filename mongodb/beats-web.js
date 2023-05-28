@@ -7,5 +7,13 @@ const beats_web = mongoose.createConnection(
     useUnifiedTopology: true,
   }
 );
+beats_web.on('error', (error) => {
+  console.error('Connection error for beats-web:', error);
+});
+
+beats_web.once('open', () => {
+  console.log('Connected to the database : beats-web');
+  // You can start using the connected database here
+});
 
 module.exports = beats_web;

@@ -195,9 +195,7 @@ For eg: /filter 8D\`\`\`\n\n`
       });
     } else {
       const query = interaction.options.get("command").value;
-      console.log(query);
       const cmd = await client.slashCommands.get(query.toLowerCase());
-      console.log(cmd);
       const nohelp = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
