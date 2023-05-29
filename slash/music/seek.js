@@ -49,6 +49,6 @@ module.exports = {
       )
       .setThumbnail(track.thumbnail);
 
-    interaction.editReply({ embeds: [seekSuccess] });
+    interaction.editReply({ embeds: [seekSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

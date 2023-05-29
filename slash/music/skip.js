@@ -25,6 +25,6 @@ module.exports = {
 
     return interaction.reply(
       success ? { embeds: [skipped] } : { embeds: [error], ephemeral: true }
-    );
+    ).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

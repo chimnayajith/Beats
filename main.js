@@ -39,21 +39,21 @@ require("./mongodb/beats-web")
 
 
 //Error Handling
-process.on("unhandledRejection", (reason, p) => {
-  console.log(" [antiCrash] :: Unhandled Rejection/Catch");
-  // console.log(reason, p);
-});
-process.on("uncaughtException", (err, origin) => {
-  console.log(" [antiCrash] :: Uncaught Exception/Catch");
-  // console.log(err, origin);
-});
-process.on("uncaughtExceptionMonitor", (err, origin) => {
-  console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
-  // console.log(err, origin);
-});
-process.on("multipleResolves", (type, promise, reason) => {
-  console.log(" [antiCrash] :: Multiple Resolves");
-  // console.log(type, promise, reason);
-});
+// process.on("unhandledRejection", (reason, p) => {
+//   console.log(" [antiCrash] :: Unhandled Rejection/Catch");
+//   console.log(reason, p);
+// });
+// process.on("uncaughtException", (err, origin) => {
+//   console.log(" [antiCrash] :: Uncaught Exception/Catch");
+//   console.log(err, origin);
+// });
+// process.on("uncaughtExceptionMonitor", (err, origin) => {
+//   console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
+//   console.log(err, origin);
+// });
+// process.on("multipleResolves", (type, promise, reason) => {
+//   console.log(" [antiCrash] :: Multiple Resolves");
+//   console.log(type, promise, reason);
+// });
 
 client.login("OTA1MTQ4MTI5MjE1NjY4MjU0.GuRbYD.ga1gOAkBk2SWIgjToMRKfZtFCRY7cqVmRy3ALs");

@@ -21,6 +21,6 @@ module.exports = {
 
     await queue.tracks.shuffle();
 
-    return interaction.reply({ embeds: [shuffleSuccess] });
+    return interaction.reply({ embeds: [shuffleSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

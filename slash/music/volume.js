@@ -50,7 +50,7 @@ module.exports = {
 
       return interaction.reply(
         success ? { embeds: [volumeSuccess] } : { embeds: [errorEmbed], ephemeral: true }
-      );
+      ).then((message) => setTimeout(() => message.delete(), 20000));
     }
   },
 };

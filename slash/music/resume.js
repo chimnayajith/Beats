@@ -25,7 +25,7 @@ module.exports = {
     const resumeSuccess = new EmbedBuilder()
       .setColor("#2f3136")
       .setDescription(
-        `<a:play:889018186782101534>⠀|⠀**${queue.currentTrack.title}** resumed`
+        `<:resume:1105337417453547630>⠀|⠀**${queue.currentTrack.title}** resumed.`
       );
 
     const errorEmbed = new EmbedBuilder()
@@ -35,7 +35,7 @@ module.exports = {
 
       if (queue.node.isPaused()) {
         queue.node.resume();;
-        interaction.reply({ embeds: [resumeSuccess] });
+        interaction.reply({ embeds: [resumeSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
       } else {
         interaction.reply({ embeds: [alreadyPlaying], ephemeral: true });
       }

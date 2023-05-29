@@ -52,7 +52,7 @@ module.exports = {
 
     if(queue.filters.ffmpeg.isEnabled(input)){
       await queue.filters.ffmpeg.setFilters(false)
-      interaction.editReply({embeds : [disableFilter]})
+      interaction.editReply({embeds : [disableFilter]}).then((message) => setTimeout(() => message.delete(), 20000));
     } else {
       await queue.filters.ffmpeg.setFilters([input])
       interaction.editReply({embeds : [enableFilter]})

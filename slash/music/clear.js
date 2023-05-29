@@ -21,6 +21,6 @@ module.exports = {
     await queue.tracks.clear();
 
     const clearSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`**🗑️ ⠀|⠀ Queue cleared**`);
-    interaction.reply({ embeds: [clearSuccess] });
+    interaction.reply({ embeds: [clearSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

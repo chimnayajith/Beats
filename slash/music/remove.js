@@ -31,12 +31,12 @@ module.exports = {
       .setDescription(`:bangbang: ⠀|⠀ Enter a valid track position`);
 
     if (!queue)
-      return interaction.reply({ embeds: [embed1] });
+      return interaction.reply({ embeds: [embed1] , ephemeral : true});
 
     if (position < 1 || position > queue.tracks.size)
-      return interaction.reply({ embeds: [embed3] });
+      return interaction.reply({ embeds: [embed3] , ephemeral : true});
 
-    if (!queue.tracks.toArray()[0]) return interaction.reply({ embeds: [embed2] });
+    if (!queue.tracks.toArray()[0]) return interaction.reply({ embeds: [embed2] , ephemeral : true});
     let song = queue.tracks.toArray()[position - 1];
     queue.tracks.removeOne((t) => t.id === song.id , true)
 
@@ -44,6 +44,6 @@ module.exports = {
       .setColor("#2f3136")
       .setDescription(`:wastebasket: ⠀|⠀ **${song.title}** removed from queue`);
 
-    interaction.reply({ embeds: [embed4] });
+    interaction.reply({ embeds: [embed4] }).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

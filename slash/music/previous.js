@@ -22,6 +22,6 @@ module.exports = {
     await queue.history.previous(true);
 
     const prevSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ |⠀ Playing **previous** track.`);
-    interaction.editReply({ embeds: [prevSuccess] });
+    interaction.editReply({ embeds: [prevSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

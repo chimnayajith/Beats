@@ -22,6 +22,6 @@ module.exports = {
       .setDescription(
         `<a:tick:889018326255288360>⠀ | ⠀Joined voice channel <#${interaction.member.voice.channel.id}>`
       );
-    interaction.reply({ embeds: [joinembed] });
+    interaction.reply({ embeds: [joinembed] }).then((message) => setTimeout(() => message.delete(), 20000));
   },
 };

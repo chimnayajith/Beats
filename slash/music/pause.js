@@ -35,7 +35,7 @@ module.exports = {
         interaction.reply({ embeds: [alreadyPaused], ephemeral: true });
       } else {
         queue.node.pause();;
-        interaction.reply({ embeds: [pauseSuccess] });
+        interaction.reply({ embeds: [pauseSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
       }
     } catch {
       interaction.reply({ embeds: [errorEmbed], ephemeral: true });

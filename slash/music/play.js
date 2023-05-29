@@ -36,6 +36,7 @@ module.exports = {
     if (!searchResult || !searchResult.tracks.length) return interaction.editReply({ embeds: [no_result], ephemeral: true });
 
     player.play(interaction.member.voice.channel.id, searchResult, {
+      requestedBy: interaction.user,
         nodeOptions: {
           metadata:{
             interaction : interaction,

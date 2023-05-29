@@ -31,7 +31,7 @@ module.exports = {
 
     const searchResult = await player.search(query, {
       requestedBy: interaction.member,
-      searchEngine: QueryType.AUTO,
+      searchEngine: QueryType.AUTO_SEARCH,
     });
     const noResult = new EmbedBuilder().setColor("#2f3136").setDescription(`:mag:⠀ | ⠀No Results found`);
 
@@ -41,6 +41,7 @@ module.exports = {
      function play(track){
         
         player.play(interaction.member.voice.channel.id, track, {
+            requestedBy: interaction.user,
             nodeOptions: {
               metadata:{
                 interaction : interaction,
@@ -50,8 +51,6 @@ module.exports = {
         });
         
      }
-
-     
 
      const searchEmbed = new EmbedBuilder()
       .setColor("#2f3136")
@@ -119,15 +118,16 @@ module.exports = {
         if (collected.isButton()) {
         if (collected.customId === "cancel_btn") {
           await collected.deferUpdate();
-          interaction.channel.send("Search cancelled");
-          await collected.editReply({ embeds: [embed], components: [] });
+          await collected.editReply({content :"Search Cancelled", embeds: [searchEmbed], components: [] });
         }
       }
 
-       if (collected.isSelectMenu()) {
+       if (collected.isStringSelectMenu()) {
         const select = collected.values[0];
         const swtichint = parseInt(select) - 1;
-        play(searchResult.tracks[swtichint])
+        play(searchResult.tracks[swtichint]);
+        await collected.deferUpdate();
+        await collected.editReply({ embeds: [searchEmbed], components: [dmRow] });
        }
      });
   }

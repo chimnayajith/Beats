@@ -46,7 +46,7 @@ player.events.on("playerStart", (queue, track) => {
       { name: "Requested By", value: `${track.requestedBy}`, inline: true }
     );
   if (queue.repeatMode === 1) {
-    queue.metadata.interaction.channel.send({ embeds: [embed1] }) ||
+    queue.metadata.interaction.channel.send({ embeds: [embed1] }).then((message) => setTimeout(() => message.delete(), 240000)) ||
       queue.connection.channel
         .send({ embeds: [embed1] })
         .then((message) => setTimeout(() => message.delete(), 240000));
@@ -98,7 +98,7 @@ player.events.on("audioTracksAdd", (queue, tracks) => {
       }
     );
   queue.metadata.interaction.channel.send({ embeds: [tracksAdd] }).then((message) => setTimeout(() => message.delete(), 20000)) ||
-    queue.connection.channel.send({ embeds: [tracksAdd] });
+    queue.connection.channel.send({ embeds: [tracksAdd] }).then((message) => setTimeout(() => message.delete(), 20000));
 });
 
 //Bot disconnected from voice channel
@@ -137,11 +137,11 @@ player.events.on("emptyChannel", (queue) => {
   queue.metadata.interaction.channel.send({
     embeds: [empty],
     components: [vote_patreon],
-  }) ||
+  }).then((message) => setTimeout(() => message.delete(), 30000)) ||
     queue.connection.channel.send({
       embeds: [empty],
       components: [vote_patreon],
-    });
+    }).then((message) => setTimeout(() => message.delete(), 30000));
 });
 
 
@@ -157,9 +157,9 @@ player.events.on("emptyQueue", (queue) => {
   queue.metadata.interaction.channel.send({
     embeds: [exhaust],
     components: [vote_patreon],
-  }) ||
+  }).then((message) => setTimeout(() => message.delete(), 30000)) ||
     queue.connection.channel.send({
       embeds: [exhaust],
       components: [vote_patreon],
-    });
+    }).then((message) => setTimeout(() => message.delete(), 30000));
 });

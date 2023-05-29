@@ -219,6 +219,7 @@ module.exports = {
                 });
                 if (search.tracks.length === 0) continue;
                 player.play(interaction.member.voice.channel.id, search.tracks[0], {
+                  requestedBy: interaction.user,
                   nodeOptions: {
                    metadata:{
                     interaction : interaction,
@@ -345,6 +346,7 @@ module.exports = {
                   });
                   if (search.tracks.length === 0) continue;
                   player.play(interaction.member.voice.channel.id, search.tracks[0], {
+                  requestedBy: interaction.user,
                     nodeOptions: {
                       metadata:{
                         interaction : interaction,
