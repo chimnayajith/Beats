@@ -13,7 +13,7 @@ module.exports = {
     const queue = player.nodes.get(interaction.guild.id);
 
     const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
-    if (!queue || !queue.node.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
     const track = queue.currentTrack;
 

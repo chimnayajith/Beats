@@ -25,7 +25,7 @@ module.exports = {
     const resumeSuccess = new EmbedBuilder()
       .setColor("#2f3136")
       .setDescription(
-        `<:resume:1105337417453547630>⠀|⠀**${queue.currentTrack.title}** resumed.`
+        `<:resume:1105337417453547630>⠀|⠀${queue.currentTrack.title} \`resumed\`.`
       );
 
     const errorEmbed = new EmbedBuilder()

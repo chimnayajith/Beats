@@ -70,7 +70,7 @@ player.events.on("audioTrackAdd", (queue, track) => {
       { name: "Requested By", value: `${track.requestedBy}`, inline: true }
     );
 
-  if (queue.node.isPlaying()) {
+  if (queue.isPlaying()) {
     queue.metadata.interaction.channel.send({ embeds: [trackAdd] }).then((message) => setTimeout(() => message.delete(), 20000)) ||
       queue.connection.channel.send({ embeds: [trackAdd] }).then((message) => setTimeout(() => message.delete(), 20000));
   }

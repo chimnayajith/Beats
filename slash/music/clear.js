@@ -13,7 +13,7 @@ module.exports = {
 
     const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
 
-    if (!queue || !queue.node.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
     const oneSong = new EmbedBuilder().setColor("#2f3136").setDescription(`**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`);
     if (!queue.tracks.toArray()[0]) return interaction.reply({ embeds: [oneSong], ephemeral: true });

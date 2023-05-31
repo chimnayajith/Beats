@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder , ActionRowBuilder , ButtonBuilder} = require("discord.js");
 const { abbreviateNumber } = require("js-abbreviation-number");
 
 module.exports = {
@@ -14,10 +14,10 @@ module.exports = {
     const queue = player.nodes.get(interaction.guild.id);
     
     const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
-    if (!queue || !queue.node.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
     const track = queue.currentTrack;
-    const methods = ["Disabled", "Track", "Queue"];
+    const methods = ["Disabled", "Track", "Queue" , "AutoPlay"];
 
     const embed2 = new EmbedBuilder()
       .setColor("#2f3136")
@@ -52,37 +52,37 @@ module.exports = {
           timecodes: true,
         })}⠀\n⠀\n`
       );
-    // const row = new ActionRowBuilder().addComponents(
-    //   new ButtonBuilder()
-    //     .setCustomId("shuffle")
-    //     .setLabel(" ")
-    //     .setStyle(2)
-    //     .setEmoji("🔀"),
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId("shuffle")
+        .setLabel(" ")
+        .setStyle(2)
+        .setEmoji("🔀"),
 
-    //   new ButtonBuilder()
-    //     .setCustomId("back")
-    //     .setLabel(" ")
-    //     .setStyle(2)
-    //     .setEmoji("⏮"),
-    //   new ButtonBuilder()
-    //     .setCustomId("pause")
-    //     .setLabel(" ")
-    //     .setStyle(2)
-    //     .setEmoji("⏸"),
+      new ButtonBuilder()
+        .setCustomId("back")
+        .setLabel(" ")
+        .setStyle(2)
+        .setEmoji("⏮"),
+      new ButtonBuilder()
+        .setCustomId("pause")
+        .setLabel("<:pause:1105337419710091316>  ")
+        .setStyle(2)
+        .setEmoji("⏸"),
 
-    //   new ButtonBuilder()
-    //     .setCustomId("next")
-    //     .setLabel(" ")
-    //     .setStyle(2)
-    //     .setEmoji("⏭"),
+      new ButtonBuilder()
+        .setCustomId("next")
+        .setLabel(" ")
+        .setStyle(2)
+        .setEmoji("⏭"),
 
-    //   new ButtonBuilder()
-    //     .setCustomId("stop")
-    //     .setLabel(" ")
-    //     .setStyle(4)
-    //     .setEmoji("⏹")
-    // );
+      new ButtonBuilder()
+        .setCustomId("stop")
+        .setLabel(" ")
+        .setStyle(4)
+        .setEmoji("⏹")
+    );
 
-    interaction.reply({ embeds: [embed2] });
+    interaction.reply({ embeds: [embed2] , components: [row]});
   },
 };

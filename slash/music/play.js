@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
 const { QueryType } = require("discord-player");
-const playerOptions  = client.config.opt.discordPlayer;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,7 +17,6 @@ module.exports = {
   utilisation: "/play <song name/url>",
 
   async execute(client, interaction) {
-
     const query = interaction.options.get("query").value;
 
     const searchResult = await player.search(query, {
@@ -41,7 +39,23 @@ module.exports = {
           metadata:{
             interaction : interaction,
            },
-           playerOptions
+          volume: 50,
+          selfDeaf: true,
+          leaveOnEmpty: true,
+          leaveOnEmptyCooldown: 10000,
+          leaveOnEnd: true,
+          leaveOnEndCooldown: 10000,
+          ytdlOptions: {
+            quality: "highest",
+            filter: "audioonly",
+            highWaterMark: 1 << 25,
+            dlChunkSize: 0,
+            requestOptions: {
+              headers: {
+                cookie:client.config.var.yt_cookie ,
+              },
+            },
+    },
         },
     });
     

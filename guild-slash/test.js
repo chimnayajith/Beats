@@ -29,7 +29,7 @@ module.exports = {
           "IDENTIFYING",
           "RESUMING",
         ];
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setTitle(` Bot Shards (${client.shard.count})`)
           .setColor("#ccd6dd")
           .setTimestamp();

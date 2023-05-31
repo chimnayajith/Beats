@@ -13,12 +13,6 @@ module.exports = {
   async execute(client, interaction) {
     const connection = getVoiceConnection(interaction.member.voice.guild.id);
     
-    embed1 = new EmbedBuilder()
-      .setColor("#2f3136")
-      .setDescription(`:x:⠀ | ⠀Not connected to a channel.`);
-    if (!interaction.guild.members.me.voice.channel)
-      return interaction.reply({ embeds: [embed1], ephemeral: true });
-
     const queue = player.nodes.get(interaction.guild.id);
     embed = new EmbedBuilder()
       .setColor("#2f3136")

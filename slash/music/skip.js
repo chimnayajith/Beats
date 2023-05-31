@@ -17,7 +17,7 @@ module.exports = {
     const skipped = new EmbedBuilder().setColor("#2f3136").setDescription(`**<:right:905743975607046145> ⠀|⠀ Current song skipped!**`);
     const error = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Something went wrong..Try Again**`);
 
-    if (!queue || !queue.node.isPlaying()) return interaction.reply({ embeds: [no_music], ephemeral: true });
+    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [no_music], ephemeral: true });
 
     if (!queue.tracks.toArray()[0]) return interaction.reply({ embeds: [no_next], ephemeral: true });
 
