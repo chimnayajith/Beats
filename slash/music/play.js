@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
 const { QueryType } = require("discord-player");
-
+const { showNotif} = require("../../utils/notifUtil")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("play")
@@ -32,7 +32,6 @@ module.exports = {
       .setDescription(`:mag:⠀ | ⠀No results found.`);
     
     if (!searchResult || !searchResult.tracks.length) return interaction.editReply({ embeds: [no_result], ephemeral: true });
-
     player.play(interaction.member.voice.channel.id, searchResult, {
       requestedBy: interaction.user,
         nodeOptions: {
@@ -60,7 +59,13 @@ module.exports = {
     });
     
     const loadingTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:loading:889018179471441941>⠀ | ⠀Loading your ${searchResult.playlist ? "playlist" : "track"}...`);
-    interaction.editReply({ embeds: [loadingTrack] })
-               .then((interaction) => setTimeout(() => interaction.delete(), 15000));
+    interaction.editReply({ embeds: [loadingTrack] }).then((interaction) => setTimeout(() => interaction.delete(), 15000));
+
+    const sendNotifs = await showNotif(interaction.guild.id)
+    if (! sendNotifs){
+      const newNotifs = new EmbedBuilder().setColor("#2f3136").setDescription("New notifications available! View them using the command `/notification`.")
+      await interaction.channel.send({embeds : [newNotifs]});
+    }
+    
   },
 };

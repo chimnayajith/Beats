@@ -1,5 +1,5 @@
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
-const { getVoiceConnection } = require("@discordjs/voice");
+const {addSongs}  = require("../utils/likedUtil");
 
 //Logging errors to console channel
 player.events.on("error", (queue, error) => {
@@ -30,7 +30,9 @@ player.events.on("playerError", (queue, error) => {
 });
 
 //Message on Track Start
-player.events.on("playerStart", (queue, track) => {
+player.events.on("playerStart", async (queue, track) => {
+  const  [minutes, seconds] = track.duration.split(":").map(Number); 
+  const totalDuration  = (minutes*60*1000) + (seconds *1000)
   const embed1 = new EmbedBuilder()
     .setTitle(`<a:diskspin:889018326578233384> Now Playing `)
     .setColor("#2f3136")
@@ -45,17 +47,50 @@ player.events.on("playerStart", (queue, track) => {
       },
       { name: "Requested By", value: `${track.requestedBy}`, inline: true }
     );
-  if (queue.repeatMode === 1) {
-    queue.metadata.interaction.channel.send({ embeds: [embed1] }).then((message) => setTimeout(() => message.delete(), 240000)) ||
-      queue.connection.channel
-        .send({ embeds: [embed1] })
-        .then((message) => setTimeout(() => message.delete(), 240000));
-  } else {
-    queue.metadata.interaction.channel.send({ embeds: [embed1] }).then((message) => setTimeout(() => message.delete(), 240000)) ||
-      queue.connection.channel.send({ embeds: [embed1] }).then((message) => setTimeout(() => message.delete(), 240000));
-  }
-});
 
+  const likeSuccess = new EmbedBuilder().setColor("#2f3136").setTitle(`${track.title} Liked`).setURL('https://dashboard.beatsbot.in/playlists/liked').setDescription("Track has been added to your liked songs. Use the command \`/liked\` to play your liked songs!").setThumbnail('https://cdn.beatsbot.in/attachments/favourites.png')
+  const dupeTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046> ⠀|⠀ This track is already liked by you!`)
+  const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId("like")
+        .setLabel("Add to Liked!")
+        .setEmoji("<:fave:1054803532244598824>")
+        .setStyle(2)
+  );
+
+  const newTrack = await queue.metadata.interaction.channel
+    .send({
+      embeds: [embed1] ,
+      components: [row],
+      fetchReply: true
+    })  || queue.connection.channel
+    .send({ 
+      embeds: [embed1] ,
+      components: [row],
+      fetchReply: true
+    })
+        
+  setTimeout(() => newTrack.delete(), totalDuration)
+  
+  const collector =newTrack.createMessageComponentCollector({
+      time : totalDuration,
+      componentType: 2,
+    });
+
+  collector.on("collect", async (collected) => {
+    await collected.deferUpdate();
+    const status = await addSongs(collected.user.id , track);//0-duplicate track; 1- song added to liked songs
+
+    switch (status) {
+      case 0 : 
+        collected.followUp({ embeds : [dupeTrack] , ephemeral : true})
+        break;
+      case 1 :
+        collected.followUp({ embeds : [likeSuccess] , ephemeral : true})
+        break;
+    }
+  });
+});
 
 //Event for track being added to queue
 player.events.on("audioTrackAdd", (queue, track) => {
@@ -78,10 +113,10 @@ player.events.on("audioTrackAdd", (queue, track) => {
 
 
 //Event for tracks/playlists being added to queue
-player.events.on("audioTracksAdd", (queue, tracks) => {
+player.events.on("audioTracksAdd", (queue, tracks ) => {
   if (queue.metadata.playlist) return;
   const tracksAdd = new EmbedBuilder()
-    .setColor("#FFFFFF")
+    .setColor("#2f3136")
     .setAuthor({ name: "Playlist Added to Queue" })
     .setTitle(`${tracks[0].playlist?.title || `\`N/A\``}`)
     .setThumbnail(tracks[0].playlist?.thumbnail.url || 'https://cdn.beatsbot.in/attachments/playlists.png')

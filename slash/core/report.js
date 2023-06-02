@@ -5,7 +5,7 @@ const report = require("../../utils/reportAdd")
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("report")
-    .setDescription("Report an issue to Beats Developers")
+    .setDescription("Report an issue or suggest a new feature to Beats Developers.")
     .addStringOption((option) =>
       option
         .setName("message")
