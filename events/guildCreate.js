@@ -5,12 +5,6 @@ module.exports = async (client, guild) => {
   let count = guild.memberCount;
   let id = guild.id;
 
-  const bot = await guild?.members
-    .fetch()
-    .then((mem) => mem.filter((m) => m.user.bot).size);
-  const human = guild?.members.cache.filter((member) => !member.user.bot).size;
-  const ratio = bot / human;
-
   const newGuild1 = new EmbedBuilder()
     .setColor("Random")
     .setTitle("YAYY!! NEW SERVER")
@@ -28,24 +22,19 @@ module.exports = async (client, guild) => {
       { name: `Guild ID `, value: `\`\`\`yaml\n${id}\`\`\``, inline: true },
       { name: `\u200B`, value: "\u200B", inline: true }
     );
+    
   const newGuild = new EmbedBuilder()
     .setColor("#2f3136")
     .setTitle("<a:tadaa:889117417811378218> Thanks for adding Beats!")
     .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
-    .setThumbnail("https://cdn.beatsbot.in/Beats_main.png")
+    .setThumbnail("https://cdn.beatsbot.in/Beats.png")
     .setDescription(
-      `Beats, the perfect music bot for your server. Beats brings to your servers all premium features free of cost.\n\n• YouTube • SoundCloud • Spotify • Live Stream • 20+ Audio Filters  •  Custom Playlist  •  Autoplay  • Supports 250+ platforms  •  And much more... \nVisit our website for more : https://beatsbot.in \n\nBeats uses slash commands.You can get started by using /help. Check out our commands **[here](https://beatsbot.in/commands)**\n\n**Enjoy Music with Beats!!<:beats:907954300414734366> **`
+      `Unleash the rhythm and elevate your Discord server with Beats, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community.\n\nVisit our website for more : https://beatsbot.in \n\nBeats uses slash commands.You can get started by using /help. Check out our commands **[here](https://beatsbot.in/commands)**\n\n**Enjoy Music with Beats!!<:beats:907954300414734366> **`
     );
 
   const notenoughmembers = new EmbedBuilder()
     .setTitle("<a:settings1:889018323491254302> System Message")
     .setDescription("Beats has left the server as it has less than 5 members");
-
-  const morebotsembed = new EmbedBuilder()
-    .setTitle("<a:settings1:889018323491254302> System Message")
-    .setDescription(
-      "Beats has left the server as number of bots are more than humans."
-    );
 
   const embeds = [newGuild1, newGuild, notenoughmembers, morebotsembed];
 
