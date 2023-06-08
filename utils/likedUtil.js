@@ -19,7 +19,7 @@ exports.addSongs = async ( userId, track ) => {
         await liked.updateOne(
             { userID : userId },
             { 
-                $push :  {liked : track.raw},
+                $push: { liked: { $each: [track.raw], $position: 0 } },
                 $inc : { trackCount : +1}
             }
             )

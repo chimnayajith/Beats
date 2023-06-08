@@ -11,6 +11,7 @@ module.exports = {
         .setDescription("Audio Filter")
         .setRequired(true)
         .addChoices(
+          { name: "Lofi", value: "lofi" },
           { name: "Bassboost", value: "bassboost" },
           { name: "8D", value: "8D" },
           { name: "Vaporwave", value: "vaporwave" },
@@ -32,7 +33,7 @@ module.exports = {
           { name: "Mstlr", value: "mstlr" },
           { name: "Mcompand", value: "mcompand" },
           { name: "Fade in", value: "fadein" },
-          { name: "Vibrato", value: "vibrato" }
+          { name: "Vibrato", value: "vibrato" },
         )
     ),
   category: "Music",

@@ -6,7 +6,7 @@ const newreport = new EmbedBuilder()
     .setColor("#2f3136")
     .setTitle("New Report")
     .setAuthor({iconURL : user.avatarURL(),name : `${user.tag} (${user.id})` })
-    .setDescription(`${message}\n\nClickhttps://admin.beatsbot.in/reports/${id}`)
+    .setDescription(`${message}\n\n[Click here](https://admin.beatsbot.in/reports/${id})`)
     .setThumbnail('https://cdn.beatsbot.in/Beats.png')
 
 client.shard.broadcastEval(async(client, targetChannelId, messageContent) => {

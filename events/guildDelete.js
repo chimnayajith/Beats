@@ -27,18 +27,7 @@ module.exports = async (client, guild) => {
       { name: `Guild ID `, value: `\`\`\`yaml\n${id}\`\`\``, inline: true },
       { name: `\u200B`, value: "\u200B", inline: true }
     );
-  if (count < 5) {
-    leaveguild.addFields({
-      name: "Reason",
-      value: `\`\`\`diff\n-Less than 5 members\`\`\``,
-    });
-  } else if (ratio <= 1) {
-    leaveguild.addFields({
-      name: "Reason",
-      value: `\`\`\`diff\n-Human:Bot ratio less than 1\`\`\``,
-    });
-  }
-
+      
   client.shard.broadcastEval(async (c) => {
     const promises = [
       client.shard.fetchClientValues("guilds.cache.size"),

@@ -7,7 +7,7 @@ const {
 } = require("discord.js");
 const playlists = require("../../models/playlist");
 const pretty = require("pretty-ms");
-const { QueryType } = require("discord-player");
+const { QueryType , Track} = require("discord-player");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -33,10 +33,9 @@ module.exports = {
   utilisation: "/playlist save or /playlist load",
 
   async execute(client, interaction) {
+    const queue = player.nodes.get(interaction.guild.id);
     if (interaction.options.getSubcommand() === "save") {
       
-      const queue = player.nodes.get(interaction.guild.id);
-
       const embed1 = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
@@ -53,8 +52,8 @@ module.exports = {
       if (!queue.tracks.toArray()[0])
         return interaction.reply({ embeds: [embed2], ephemeral: true });
 
-      const arr = queue.tracks.map((track) => track.url);
-      arr.push(queue.currentTrack.url);
+      const arr = queue.tracks.map((track) => track.raw);
+      arr.unshift(queue.currentTrack.raw);
       const length = queue.estimatedDuration;
       const duration = pretty(length);
 
@@ -208,49 +207,83 @@ module.exports = {
                 .setDescription(
                   `<a:loading:889018179471441941>⠀ | ⠀Loading your playlist : **${dataQuery[0].playlistName}**`
                 );
-              interaction.editReply({ embeds: [loading], components: [] });
               const arr = dataQuery[0].playlist;
-              const searchres = [];
-              for (i = 0; i < arr.length; i++) {
-                const search = await player.search(arr[i], {
-                  requestedBy: interaction.member,
-                  searchEngine: QueryType.AUTO,
-                });
-                if (search.tracks.length === 0) continue;
-                player.play(interaction.member.voice.channel.id, search.tracks[0], {
-                  requestedBy: interaction.user,
-                  nodeOptions: {
-                   metadata:{
-                    interaction : interaction,
-                    playlist:true
-                   },
-                   volume: 50,
-                   selfDeaf: true,
-                   leaveOnEmpty: true,
-                   leaveOnEmptyCooldown: 10000,
-                   leaveOnEnd: true,
-                   leaveOnEndCooldown: 10000,
-                   ytdlOptions: {
-                     quality: "highest",
-                     filter: "audioonly",
-                     highWaterMark: 1 << 25,
-                     dlChunkSize: 0,
-                     requestOptions: {
-                       headers: {
-                         cookie:client.config.var.yt_cookie ,
-                       },
-                     },
-             }
-                  },
-              });
-              }
+                const tracks = [];
+                for (const song of arr) {
+                  const track = new Track(interaction.client, {
+                      author: song.author,
+                      description: song.description || song.title,
+                      duration: song.duration,
+                      thumbnail: song.thumbnail,
+                      title: song.title,
+                      url: song.url,
+                      views: song.views,
+                      requestedBy: client.users.resolve(song.requestedBy),
+                      queryType: QueryType.SPOTIFY_SONG,
+                      source: 'spotify',
+                      playlist: {
+                        title : dataQuery[0].playlistName,
+                        thumbnail : {
+                          url : dataQuery[0].image ,
+                        },
+                        source : 'spotify',
+                        tracks :  arr ,
+                      }
+                  });
+                  tracks.push(track)
+                  }
+
+                  const playlist = player.createPlaylist({
+                    author: { name: tracks[0].author, url: tracks[0].url },
+                    description: '',
+                    source: 'spotify',
+                    thumbnail: dataQuery[0].image,
+                    title: dataQuery[0].playlistName,
+                    tracks,
+                    type: 'playlist',
+                    url: tracks[0].url
+                  });
+
+                  if(!queue) {
+                    const queue = player.nodes.create(interaction.guild, {
+                      metadata: {
+                            interaction : interaction,
+                      },
+                      volume: 50,
+                      selfDeaf: true,
+                      leaveOnEmpty: true,
+                      leaveOnEmptyCooldown: 10000,
+                      leaveOnEnd: true,
+                      leaveOnEndCooldown: 10000,
+                      ytdlOptions: {
+                        quality: "highest",
+                        filter: "audioonly",
+                        highWaterMark: 1 << 25,
+                        dlChunkSize: 0,
+                        requestOptions: {
+                          headers: {
+                            cookie:client.config.var.yt_cookie ,
+                          },
+                        },
+                        }
+                     })
               
+                     if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+              
+                     queue.addTrack(playlist)
+                     queue.node.play()
+                     interaction.editReply({ embeds: [loading], components: [] }).then((interaction) => setTimeout(() => interaction.delete(), 5000));
+                  } else{
+                    interaction.editReply({ embeds: [loading], components: [] }).then((interaction) => setTimeout(() => interaction.delete(), 5000));
+                    queue.addTrack(playlist.tracks)
+                  } 
+
             } else if (collected1.customId === "delete") {
               const dlt_confirm = new EmbedBuilder()
                 .setColor("#2f3136")
                 .setTitle("Confirmation")
                 .setDescription(
-                  `Are you sure you want to delete the playlist : ${dataQuery[0].playlistName} ?`
+                  `Are you sure you want to delete the playlist : **${dataQuery[0].playlistName}** ?`
                 );
               const confirm = new ButtonBuilder()
                 .setCustomId("confirm")
@@ -276,10 +309,9 @@ module.exports = {
               });
               del.on("collect", async (collected2) => {
                 if (collected2.customId === "confirm") {
-                  let whatever = await playlists.findOne({
+                  await playlists.deleteOne({
                     _id: dataQuery[0]._id,
                   });
-                  whatever.delete();
                   collected2.deferUpdate();
                   const deleted = new EmbedBuilder()
                     .setColor("#2f3136")
@@ -349,34 +381,85 @@ module.exports = {
                 const loading = new EmbedBuilder()
                   .setColor("2f3136")
                   .setDescription(
-                    `:loading:⠀ | ⠀Loading playlist : ${dataQuery[0].playlistName}`
+                    `<a:loading:889018179471441941>⠀ | ⠀Loading playlist : **${dataQuery[1].playlistName}**`
                   );
-                interaction.editReply({ embeds: [loading], components: [] });
                 const arr = dataQuery[1].playlist;
-                const searchres = [];
-                for (i = 0; i < arr.length; i++) {
-                  const search = await player.search(arr[i], {
-                    requestedBy: interaction.member,
-                    searchEngine: QueryType.AUTO,
+                const tracks = [];
+                for (const song of arr) {
+                  const track = new Track(interaction.client, {
+                      author: song.author,
+                      description: song.description || song.title,
+                      duration: song.duration,
+                      thumbnail: song.thumbnail,
+                      title: song.title,
+                      url: song.url,
+                      views: song.views,
+                      requestedBy: client.users.resolve(song.requestedBy),
+                      queryType: QueryType.SPOTIFY_SONG,
+                      source: 'spotify',
+                      playlist: {
+                        title : dataQuery[1].playlistName,
+                        thumbnail : {
+                          url : dataQuery[1].image ,
+                        },
+                        source : 'spotify',
+                        tracks :  arr ,
+                      }
                   });
-                  if (search.tracks.length === 0) continue;
-                  player.play(interaction.member.voice.channel.id, search.tracks[0], {
-                  requestedBy: interaction.user,
-                    nodeOptions: {
-                      metadata:{
-                        interaction : interaction,
-                        playlist:true
-                       },
-                     playerOptions,
-                    },
-                });
-                }
+                  tracks.push(track)
+                  }
+
+                  const playlist = player.createPlaylist({
+                    author: { name: tracks[1].author, url: tracks[1].url },
+                    description: '',
+                    source: 'spotify',
+                    thumbnail: dataQuery[1].image,
+                    title: dataQuery[1].playlistName,
+                    tracks,
+                    type: 'playlist',
+                    url: tracks[1].url
+                  });
+
+                  if(!queue) {
+                    const queue = player.nodes.create(interaction.guild, {
+                      metadata: {
+                            interaction : interaction,
+                      },
+                      volume: 50,
+                      selfDeaf: true,
+                      leaveOnEmpty: true,
+                      leaveOnEmptyCooldown: 10000,
+                      leaveOnEnd: true,
+                      leaveOnEndCooldown: 10000,
+                      ytdlOptions: {
+                        quality: "highest",
+                        filter: "audioonly",
+                        highWaterMark: 1 << 25,
+                        dlChunkSize: 0,
+                        requestOptions: {
+                          headers: {
+                            cookie:client.config.var.yt_cookie ,
+                          },
+                        },
+                        }
+                     })
+              
+                     if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+              
+                     queue.addTrack(playlist)
+                     queue.node.play()
+                     interaction.editReply({ embeds: [loading], components: [] }).then((interaction) => setTimeout(() => interaction.delete(), 5000));
+                  } else{
+                    interaction.editReply({ embeds: [loading], components: [] }).then((interaction) => setTimeout(() => interaction.delete(), 5000));
+                    queue.addTrack(playlist.tracks)
+                  } 
+                  
               } else if (collected1.customId === "delete") {
                 const dlt_confirm = new EmbedBuilder()
                   .setColor("#2f3136")
                   .setTitle("Confirmation")
                   .setDescription(
-                    `Are you sure you want to delete the playlist : ${dataQuery[0].playlistName} ?`
+                    `Are you sure you want to delete the playlist : ${dataQuery[1].playlistName} ?`
                   );
                 const confirm = new ButtonBuilder()
                   .setCustomId("confirm")
@@ -405,10 +488,9 @@ module.exports = {
                 });
                 del.on("collect", async (collected2) => {
                   if (collected2.customId === "confirm") {
-                    let whatever = await playlists.findOne({
+                    await playlists.deleteOne({
                       _id: dataQuery[1]._id,
                     });
-                    whatever.delete();
                     collected2.deferUpdate();
                     const deleted = new EmbedBuilder()
                       .setColor("#2f3136")

@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ChannelType, PermissionFlagsBits } = require("discord.js");
 module.exports = async (client, guild) => {
   let ownerTag = await guild.fetchOwner().then((owner) => owner.user.tag);
   let name = guild.name;
@@ -29,14 +29,10 @@ module.exports = async (client, guild) => {
     .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
     .setThumbnail("https://cdn.beatsbot.in/Beats.png")
     .setDescription(
-      `Unleash the rhythm and elevate your Discord server with Beats, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community.\n\nVisit our website for more : https://beatsbot.in \n\nBeats uses slash commands.You can get started by using /help. Check out our commands **[here](https://beatsbot.in/commands)**\n\n**Enjoy Music with Beats!!<:beats:907954300414734366> **`
+    `Unleash the rhythm and elevate your Discord server with Beats, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community.\n\nBeats uses slash commands.You can get started by using /help. **[Website](https://beatsbot.in)**  |  **[Commands](https://dashboard.beatsbot.in/commands)**  | **[Blog](https://blog.beatsbot.in/))**  |  **[Support Server](https://discord.gg/JRRZmdFGmq)**\n\n**Enjoy Music with Beats!!<:beats:1115516004886388736>**`
     );
 
-  const notenoughmembers = new EmbedBuilder()
-    .setTitle("<a:settings1:889018323491254302> System Message")
-    .setDescription("Beats has left the server as it has less than 5 members");
-
-  const embeds = [newGuild1, newGuild, notenoughmembers, morebotsembed];
+  const embeds = [newGuild1, newGuild];
 
   client.shard.broadcastEval(async (c) => {
     const promises = [
@@ -64,26 +60,25 @@ module.exports = async (client, guild) => {
 
   client.shard.broadcastEval(
     async (c, { g, e }) => {
+async function getDefaultChannel(guild) {
+
+    guild.channels.find((channel) => {
+      const permissions = channel.permissionsFor(guild.members.me);
+      return (
+        permissions && permissions.has(PermissionFlagsBits.SendMessages) && channel.type === ChannelType.GuildText
+      );
+    }) || null
+}
+
+      const guild = await g;
       const consol = c.channels.cache.get("899704750554112021");
-      const guild = c.guilds.cache.get(g?.id);
-      const ownerTag = guild?.fetchOwner().then((owner) => owner.user.tag);
       const name = guild?.name;
-      const count = guild?.memberCount;
-
-      const channel = await guild?.systemChannel;
+      const channel = await guild?.systemChannel || await getDefaultChannel(guild);
       if (!channel)
-        return consol?.send(`No system channel to welcome in **${name}**`);
+        return consol?.send(`No channel to welcome in **${await g.name}**`);
 
-      await c.channels.cache
-        .get("895528930281410602")
-        ?.send({ embeds: [e[0]] });
+      await c.channels.cache.get("895528930281410602") ?.send({ embeds: [e[0]] });
 
-      if (count <= 5) {
-        //             channel.send({embeds:[e[2]]}).catch((err) => consol?.send(`Couldn't send welcome message to **${name}**\n ${err}` ))
-        await consol?.send(
-          `Automatically left from **${name}** due to insufficient members.`
-        );
-      } else {
         channel
           .send({ embeds: [e[1]] })
           .catch((err) =>
@@ -91,16 +86,12 @@ module.exports = async (client, guild) => {
               `Couldn't send welcome message to **${name}**\n ${err}`
             )
           );
-      }
+      
     },
     { context: { g: guild, e: embeds } }
   );
 
-  const channel = await guild.systemChannel;
-  if (count <= 5) {
-    channel
-      .send({ embeds: [notenoughmembers] })
-      .catch((err) => console.log(err));
-    guild.leave();
-  }
+
 };
+
+

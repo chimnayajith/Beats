@@ -49,6 +49,7 @@ player.events.on("playerStart", async (queue, track) => {
     );
 
   const likeSuccess = new EmbedBuilder().setColor("#2f3136").setTitle(`${track.title} Liked`).setURL('https://dashboard.beatsbot.in/playlists/liked').setDescription("Track has been added to your liked songs. Use the command \`/liked\` to play your liked songs!").setThumbnail('https://cdn.beatsbot.in/attachments/favourites.png')
+  const ytTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046> ⠀|⠀ Youtube tracks cannot be added to liked songs. We are really sorry for the inconvenience caused.`)
   const dupeTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046> ⠀|⠀ This track is already liked by you!`)
   const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -80,7 +81,7 @@ player.events.on("playerStart", async (queue, track) => {
   collector.on("collect", async (collected) => {
     await collected.deferUpdate();
     const status = await addSongs(collected.user.id , track);//0-duplicate track; 1- song added to liked songs
-
+    if(track.source === 'youtube') return collected.followUp({embeds : [ytTrack] , ephemeral : true});
     switch (status) {
       case 0 : 
         collected.followUp({ embeds : [dupeTrack] , ephemeral : true})

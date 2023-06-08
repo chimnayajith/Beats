@@ -11,9 +11,9 @@ module.exports = {
   execute(client, message) {
     const embed1 = new EmbedBuilder()
       .setColor("#2f3136")
-      .setTitle("Changelog - [v3.0.1] ")
+      .setTitle("Changelog - [v3.2.0] ")
       .setDescription(
-        `\`\`\`diff\n+ AutoPlay command is now a separate command.\n\n+ UI changes on our website/n/n+ New Blog page : https://blog.beatsbot.in\n\n+ Vote on discordbotlist.com to access vote restricted commands.\n\n+ You can now bypass vote retricted commands for a month by becoming a patron.\n\n+ Stability fixes.\n\n- review page removed from dashboard.\n\n- removedupes command is not available due to a package error.\`\`\``
+        `\`\`\`diff\n+ New Liked Command Added to play the songs you've liked.\n\n+ New Report command to report issues or to give suggestions.\n\n+ New Notification command to check latest changes.\n\n+ Bug Fixes.\`\`\``
       );
     message.reply({
       embeds: [embed1],

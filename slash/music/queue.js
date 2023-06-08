@@ -18,16 +18,18 @@ module.exports = {
 
   async execute(client, interaction) {
     const queue = player.nodes.get(interaction.guild.id);
+    const embed3 = new EmbedBuilder()
+    .setColor("#2f3136")
+    .setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
+  if (!queue)
+    return interaction.reply({ embeds: [embed3], ephemeral: true });
+
     const length = queue.estimatedDuration;
     const duration = pretty(length);
 
     const methods = ["", "*Song looped*", "*Queue looped*"];
 
-    const embed3 = new EmbedBuilder()
-      .setColor("#2f3136")
-      .setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
-    if (!queue)
-      return interaction.reply({ embeds: [embed3], ephemeral: true });
+   
 
     const autoplay = new EmbedBuilder()
       .setColor("#2f3136")

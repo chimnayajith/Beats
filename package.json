@@ -13,6 +13,7 @@
     "@discord-player/extractor": "^4.2.0",
     "@discordjs/opus": "^0.8.0",
     "@discordjs/rest": "^0.3.0",
+    "@discordjs/voice": "^0.16.0",
     "@distube/ytdl-core": "^4.11.7",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@sapphire/time-utilities": "^1.6.0",

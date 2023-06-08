@@ -26,7 +26,7 @@ module.exports = {
             "https://media.discordapp.net/attachments/984800721792794675/985044566518431775/unknown.png"
         )
         .setDescription(
-          `**${interaction.user.tag}**\n\nReport : ${message}\n\nAre you sure you want to send this report?`
+          `**${interaction.user.tag}**\n\nReport : \`\`\`${message}\`\`\`\n\nAre you sure you want to send this report?`
         );
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()

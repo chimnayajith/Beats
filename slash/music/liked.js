@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const likedSongs = require("../../utils/likedUtil")
+const { QueryType , Track } = require("discord-player");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -88,6 +89,7 @@ module.exports = {
        queue.node.play()
       interaction.reply({embeds: [loadingLiked]}).then((interaction) => setTimeout(() => interaction.delete(), 5000));
     } else{
+      interaction.reply({embeds: [loadingLiked]}).then((interaction) => setTimeout(() => interaction.delete(), 5000));
       queue.addTrack(playlist.tracks)
     }
   },
