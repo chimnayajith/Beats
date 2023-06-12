@@ -38,9 +38,7 @@ module.exports = {
           source: 'youtube',
           playlist: {
             title : "Liked Songs",
-            thumbnail : {
-              url : "https://cdn.beatsbot.in/attachments/favourites.png",
-            },
+            thumbnail : "https://cdn.beatsbot.in/attachments/favourites.png",
             source : 'youtube',
             tracks :  data ,
           }

@@ -1,5 +1,6 @@
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const {addSongs}  = require("../utils/likedUtil");
+const recents  = require("../utils/recentUtil");
 
 //Logging errors to console channel
 player.events.on("error", (queue, error) => {
@@ -31,6 +32,7 @@ player.events.on("playerError", (queue, error) => {
 
 //Message on Track Start
 player.events.on("playerStart", async (queue, track) => {
+  recents.addRecents(track.requestedBy.id , queue.options.guild.id , track)
   const  [minutes, seconds] = track.duration.split(":").map(Number); 
   const totalDuration  = (minutes*60*1000) + (seconds *1000)
   const embed1 = new EmbedBuilder()
@@ -48,7 +50,7 @@ player.events.on("playerStart", async (queue, track) => {
       { name: "Requested By", value: `${track.requestedBy}`, inline: true }
     );
 
-  const likeSuccess = new EmbedBuilder().setColor("#2f3136").setTitle(`${track.title} Liked`).setURL('https://dashboard.beatsbot.in/playlists/liked').setDescription("Track has been added to your liked songs. Use the command \`/liked\` to play your liked songs!").setThumbnail('https://cdn.beatsbot.in/attachments/favourites.png')
+  const likeSuccess = new EmbedBuilder().setColor("#2f3136").setTitle(`${track.title} Liked`).setURL('https://dashboard.beatsbot.in/likedsongs').setDescription("Track has been added to your liked songs. Use the command \`/liked\` to play your liked songs!").setThumbnail('https://cdn.beatsbot.in/attachments/favourites.png')
   const ytTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046> ⠀|⠀ Youtube tracks cannot be added to liked songs. We are really sorry for the inconvenience caused.`)
   const dupeTrack = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046> ⠀|⠀ This track is already liked by you!`)
   const row = new ActionRowBuilder().addComponents(
@@ -81,14 +83,17 @@ player.events.on("playerStart", async (queue, track) => {
   collector.on("collect", async (collected) => {
     await collected.deferUpdate();
     const status = await addSongs(collected.user.id , track);//0-duplicate track; 1- song added to liked songs
-    if(track.source === 'youtube') return collected.followUp({embeds : [ytTrack] , ephemeral : true});
-    switch (status) {
-      case 0 : 
-        collected.followUp({ embeds : [dupeTrack] , ephemeral : true})
-        break;
-      case 1 :
-        collected.followUp({ embeds : [likeSuccess] , ephemeral : true})
-        break;
+    // if(track.source === 'youtube') {
+    //   collected.followUp({embeds : [ytTrack] , ephemeral : true});
+    // } else {
+      switch (status) {
+        case 0 : 
+          collected.followUp({ embeds : [dupeTrack] , ephemeral : true})
+          break;
+        case 1 :
+          collected.followUp({ embeds : [likeSuccess] , ephemeral : true})
+          break;
+      // }
     }
   });
 });
@@ -120,7 +125,7 @@ player.events.on("audioTracksAdd", (queue, tracks ) => {
     .setColor("#2f3136")
     .setAuthor({ name: "Playlist Added to Queue" })
     .setTitle(`${tracks[0].playlist?.title || `\`N/A\``}`)
-    .setThumbnail(tracks[0].playlist?.thumbnail.url || 'https://cdn.beatsbot.in/attachments/playlists.png')
+    .setThumbnail(tracks[0].playlist?.thumbnail || 'https://cdn.beatsbot.in/attachments/playlists.png')
     .addFields(
       {
         name: "Tracks",

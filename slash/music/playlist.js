@@ -52,8 +52,33 @@ module.exports = {
       if (!queue.tracks.toArray()[0])
         return interaction.reply({ embeds: [embed2], ephemeral: true });
 
-      const arr = queue.tracks.map((track) => track.raw);
-      arr.unshift(queue.currentTrack.raw);
+      const arr = queue.tracks.map((track) => ({
+        source : track.raw.source,
+        title : track.title,
+        description : track.raw.description,
+        author : track.author,
+        url : track.raw.url || track.url,
+        thumbnail : track.thumbnail,
+        duration : track.duration,
+        views : track.views,
+        requestedBy:track.requestedBy.id,
+        queryType: track.queryType
+      }));
+      
+      const currentData = {
+        source : queue.currentTrack.raw.source,
+        title : queue.currentTrack.title,
+        description : queue.currentTrack.raw.description,
+        author : queue.currentTrack.author,
+        url : queue.currentTrack.raw.url || queue.currentTrack.url,
+        thumbnail : queue.currentTrack.thumbnail,
+        duration : queue.currentTrack.duration,
+        views : queue.currentTrack.views,
+        requestedBy:queue.currentTrack.requestedBy.id,
+        queryType: queue.currentTrack.queryType
+      }
+      arr.unshift(currentData);
+
       const length = queue.estimatedDuration;
       const duration = pretty(length);
 
@@ -223,9 +248,7 @@ module.exports = {
                       source: 'spotify',
                       playlist: {
                         title : dataQuery[0].playlistName,
-                        thumbnail : {
-                          url : dataQuery[0].image ,
-                        },
+                        thumbnail : dataQuery[0].image ,
                         source : 'spotify',
                         tracks :  arr ,
                       }
@@ -399,9 +422,7 @@ module.exports = {
                       source: 'spotify',
                       playlist: {
                         title : dataQuery[1].playlistName,
-                        thumbnail : {
-                          url : dataQuery[1].image ,
-                        },
+                        thumbnail : dataQuery[0].image ,
                         source : 'spotify',
                         tracks :  arr ,
                       }

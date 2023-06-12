@@ -63,7 +63,7 @@ module.exports = {
 
     const sendNotifs = await showNotif(interaction.guild.id)
     if (! sendNotifs){
-      const newNotifs = new EmbedBuilder().setColor("#2f3136").setDescription("New notifications available! View them using the command `/notification`.")
+      const newNotifs = new EmbedBuilder().setColor("#2f3136").setDescription("New notifications available! View them using : </notification:1114949019999932527>.")
       await interaction.channel.send({embeds : [newNotifs]});
     }
     
