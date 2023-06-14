@@ -1,4 +1,4 @@
-const { EmbedBuilder, ChannelType, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, ChannelType, PermissionFlagsBits , WebhookClient} = require("discord.js");
 module.exports = async (client, guild) => {
   let ownerTag = await guild.fetchOwner().then((owner) => owner.user.tag);
   let name = guild.name;
@@ -29,10 +29,9 @@ module.exports = async (client, guild) => {
     .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
     .setThumbnail("https://cdn.beatsbot.in/Beats.png")
     .setDescription(
-    `Unleash the rhythm and elevate your Discord server with Beats, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community.\n\nBeats uses slash commands.You can get started by using /help. **[Website](https://beatsbot.in)**  |  **[Commands](https://dashboard.beatsbot.in/commands)**  | **[Blog](https://blog.beatsbot.in/))**  |  **[Support Server](https://discord.gg/JRRZmdFGmq)**\n\n**Enjoy Music with Beats!!<:beats:1115516004886388736>**`
+    `Unleash the rhythm and elevate your Discord server with Beats, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community.\n\nBeats uses slash commands.You can get started by using : </help:957138913833668629>.\n\n **[Website](https://beatsbot.in)⠀|⠀[Commands](https://dashboard.beatsbot.in/commands)  ⠀|⠀ [Blog](https://blog.beatsbot.in/)  ⠀|⠀[Support Server](https://discord.gg/JRRZmdFGmq)**\n\n**Enjoy Music with Beats!!<:beats:1115516004886388736>**`
     );
 
-  const embeds = [newGuild1, newGuild];
 
   client.shard.broadcastEval(async (c) => {
     const promises = [
@@ -41,7 +40,6 @@ module.exports = async (client, guild) => {
         c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
       ),
     ];
-
     Promise.all(promises).then((results) => {
       const totalGuilds = results[0].reduce(
         (acc, guildCount) => acc + guildCount,
@@ -58,40 +56,19 @@ module.exports = async (client, guild) => {
     });
   });
 
-  client.shard.broadcastEval(
-    async (c, { g, e }) => {
-async function getDefaultChannel(guild) {
 
-    guild.channels.find((channel) => {
-      const permissions = channel.permissionsFor(guild.members.me);
-      return (
-        permissions && permissions.has(PermissionFlagsBits.SendMessages) && channel.type === ChannelType.GuildText
-      );
-    }) || null
-}
+  async function getDefaultChannel(guild) {
+    const channel = guild.channels.cache.find((channel) => channel.type === ChannelType.GuildText && channel.permissionsFor(guild.members.me).has('SendMessages'));
+      return channel;
+  }
+  
+  const channel = await guild.systemChannel || await getDefaultChannel(guild);
 
-      const guild = await g;
-      const consol = c.channels.cache.get("899704750554112021");
-      const name = guild?.name;
-      const channel = await guild?.systemChannel || await getDefaultChannel(guild);
-      if (!channel)
-        return consol?.send(`No channel to welcome in **${await g.name}**`);
+  channel.send({ embeds: [newGuild] })
+         .catch();
 
-      await c.channels.cache.get("895528930281410602") ?.send({ embeds: [e[0]] });
-
-        channel
-          .send({ embeds: [e[1]] })
-          .catch((err) =>
-            consol?.send(
-              `Couldn't send welcome message to **${name}**\n ${err}`
-            )
-          );
-      
-    },
-    { context: { g: guild, e: embeds } }
-  );
-
-
+  const webhookClient = new WebhookClient({id:'1118369501679976479', token:'urX29dG8RvTL_urvJTiW0CCOztoziRCyLo-Pe_PqeR8ThUU4786otU28zpqUk5qAjmFJ'});
+  webhookClient.send({embeds : [newGuild1]});
 };
 
 

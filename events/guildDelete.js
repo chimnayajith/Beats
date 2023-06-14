@@ -1,13 +1,10 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder  , WebhookClient} = require("discord.js");
 module.exports = async (client, guild) => {
   let ownerTag = await guild.fetchOwner().then((owner) => owner.user.tag);
   let name = guild.name;
   let count = guild.memberCount;
   let id = guild.id;
 
-  const bot = await guild.members.cache.filter((m) => m.user.bot).size;
-  const human = guild.members.cache.filter((member) => !member.user.bot).size;
-  const ratio = human / bot;
   const leaveguild = new EmbedBuilder()
     .setColor("Random")
     .setTitle("UH OH! REMOVED FROM SERVER")
@@ -53,10 +50,6 @@ module.exports = async (client, guild) => {
     });
   });
 
-  client.shard.broadcastEval(
-    async (c, { e }) => {
-      c.channels.cache.get("895529189619425320")?.send({ embeds: [e] });
-    },
-    { context: { e: leaveguild } }
-  );
+  const webhookClient = new WebhookClient({url : 'https://discord.com/api/webhooks/1118508137331306507/0TZe3roWpzv0DgMNC4h5AU1fARJ_eSFfqFMohWhMInSs6jL7is51xq1MJTJx1uiHz7ua'});
+  webhookClient.send({embeds : [leaveguild]})
 };
