@@ -1,5 +1,6 @@
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
 const vote = require("../utils/voteCheck")
+const axios = require('axios');
 
 module.exports = async (client, interaction) => {
   if (interaction.isCommand()) {
@@ -30,15 +31,24 @@ module.exports = async (client, interaction) => {
           new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel("Vote").setURL('https://beatsbot.in/vote/dbl').setEmoji('<a:vote:956901647043416104>'),
           new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel("Donate").setURL('https://beatsbot.in/patreon').setEmoji('<:patreon:956903191507763240>')
         )
-      
+
+      //VOters on DBL
     if (cmd && cmd.vote) {
-        const patrons = ['339521713496915972']//'891581154765979668' ,
+        const patrons = []//'891581154765979668' ,
       patron : if ( patrons.includes(interaction.user.id) ) {
         break patron;
       }
       else {
-      const voted = await vote.checkVoted(interaction.user.id)
-      if (!voted) return interaction.reply({embeds : [vote_restricted] , components : [row] , ephemeral : true});
+      axios.get(`https://discordbotlist.com/api/v1/bots/886801342239211522/upvotes`, {
+        headers: {
+          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxLCJpZCI6Ijg4NjgwMTM0MjIzOTIxMTUyMiIsImlhdCI6MTY4Njc0ODE0OH0.HMQfxiIqF-FNzZP9M4tCzdcr58xSwU7HwocOwz_95Q0`
+        }
+      })
+        .then((response) => {
+            const data = response.data.upvotes;
+            const voted =  data.some(item => item.user_id === interaction.user.id)
+            if (!voted) return interaction.reply({embeds : [vote_restricted] , components : [row] , ephemeral : true});
+        })      
       }
     }
 

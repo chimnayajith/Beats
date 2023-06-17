@@ -16,7 +16,7 @@ fs.readdirSync("./slash").forEach((dirs) => {
     .readdirSync(`./slash/${dirs}/`)
     .filter((file) => file.endsWith(".js"));
 
-  rest = new REST({ version: "9" }).setToken("OTA1MTQ4MTI5MjE1NjY4MjU0.GuRbYD.ga1gOAkBk2SWIgjToMRKfZtFCRY7cqVmRy3ALs");
+  rest = new REST({ version: "9" }).setToken("OTA1MTQ4MTI5MjE1NjY4MjU0.GiZ9QU.XBJ5mNZl8kVKW_0ADzjxf8J1P70ksFrmMqZDBo");
 
   for (const file of commandFiles) {
     console.log(`\t-> Loaded command ${file.split(".")[0]}`);

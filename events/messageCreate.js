@@ -1,4 +1,4 @@
-const { EmbedBuilder , ActionRowBuilder , ButtonBuilder} = require("discord.js");
+const { EmbedBuilder , ActionRowBuilder , ButtonBuilder , WebhookClient} = require("discord.js");
 
 module.exports = async (client, message) => {
 
@@ -15,7 +15,22 @@ module.exports = async (client, message) => {
   );  
  
   if (message.author.bot) return;
-  if (message.channel.type === 1) return message.reply({embeds : [dmEmbed] , components : [supportButton]});
+  // if (message.channel.type === 1) return message.reply({embeds : [dmEmbed] , components : [supportButton]});..
+
+    const webhookClient = new WebhookClient({id:'1118091168052420608', token:'mXyHxt8zu3-cNDar08PTGa52l-DyWOhGZUKmDWB0cs2BkoZgRdZOwIJ3RctVW8T8Trlq'});
+  if (message.channel.isDMBased()){
+    const send = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setAuthor({
+        name: `${message.author.tag} (${message.author.id})`,
+        iconURL: message.author.avatarURL(),
+      })
+      .setDescription(message.content)
+      .setTimestamp();
+    webhookClient.send({embeds : [send]});
+    return;
+  };
+  
   
   const hello = new EmbedBuilder()
     .setColor("#2f3136")
@@ -44,3 +59,4 @@ module.exports = async (client, message) => {
     console.log(e);
   }
 };
+

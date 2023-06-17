@@ -26,19 +26,19 @@ module.exports = async (client, guild) => {
     const jsonData = JSON.parse(data);
     const totalGuilds = jsonData.totalGuilds;
     const totalMembers = jsonData.totalMembers;
-    await stats.findOneAndUpdate(
-      { 
-        _id : "bot_stats"
-      }, 
-      { 
-        $set :{
-          serverCount : totalGuilds, 
-          userCount : totalMembers 
-        }
-      }, 
-      { 
-        upsert: true 
-      })
+    // await stats.findOneAndUpdate(
+    //   { 
+    //     _id : "bot_stats"
+    //   }, 
+    //   { 
+    //     $set :{
+    //       serverCount : totalGuilds, 
+    //       userCount : totalMembers 
+    //     }
+    //   }, 
+    //   { 
+    //     upsert: true 
+    //   })
 });
 
   })

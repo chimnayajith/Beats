@@ -19,17 +19,19 @@ module.exports = {
       .setDescription(
         `<a:tick:889018326255288360>⠀ | ⠀Beats has been \`disconnected\`.`
       );
-    if (queue) {
-      try {
-        queue.node.pause();
-        queue.delete();
-        interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
       connection.destroy();
       interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
-    }
+    // if (queue) {
+    //   try {
+    //     queue.node.pause();
+    //     queue.delete();
+    //     interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // } else {
+    //   connection.destroy();
+    //   interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
+    // }
   },
 };

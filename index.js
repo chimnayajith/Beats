@@ -1,7 +1,7 @@
 const { ShardingManager , ShardEvents } = require('discord.js');
 
 const manager = new ShardingManager('./main.js', { 
-    token: "OTA1MTQ4MTI5MjE1NjY4MjU0.GuRbYD.ga1gOAkBk2SWIgjToMRKfZtFCRY7cqVmRy3ALs"
+    token: "OTA1MTQ4MTI5MjE1NjY4MjU0.GiZ9QU.XBJ5mNZl8kVKW_0ADzjxf8J1P70ksFrmMqZDBo"
 });
 
 manager.on('shardCreate',async (shard) => console.log(`Launched shard ${shard.id}`));
