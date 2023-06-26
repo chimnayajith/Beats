@@ -61,9 +61,6 @@ module.exports = async (queue , track ) => {
     if(collected.customId === 'like'){
       
       const status = await addSongs(collected.user.id , track);//0-duplicate track; 1- song added to liked songs
-      // if(track.source === 'youtube') {
-      //   collected.followUp({embeds : [ytTrack] , ephemeral : true});
-      // } else {
         switch (status) {
           case 0 : 
             collected.followUp({ embeds : [dupeTrack] , ephemeral : true})
@@ -71,7 +68,6 @@ module.exports = async (queue , track ) => {
           case 1 :
             collected.followUp({ embeds : [likeSuccess] , ephemeral : true})
             break;
-        // }
       }
    } else if ( collected.customId === 'suggestions'){
     const relatedTracks = await track.extractor.getRelatedTracks(track);
@@ -150,7 +146,34 @@ module.exports = async (queue , track ) => {
             }  
         const select = collected.values[0];
         const switchint = parseInt(select) ;
-        queue.addTrack(relatedTracks.tracks[switchint])
+        // queue.addTrack(relatedTracks.tracks[switchint])
+
+        player.play(interaction.member.voice.channel.id, relatedTracks.tracks[switchint], {
+          requestedBy: interaction.user,
+            nodeOptions: {
+              metadata:{
+                interaction : interaction,
+               },
+              volume: 50,
+              selfDeaf: true,
+              leaveOnEmpty: true,
+              leaveOnEmptyCooldown: 10000,
+              leaveOnEnd: true,
+              leaveOnEndCooldown: 10000,
+              ytdlOptions: {
+                quality: "highest",
+                filter: "audioonly",
+                highWaterMark: 1 << 25,
+                dlChunkSize: 0,
+                requestOptions: {
+                  headers: {
+                    cookie:client.config.var.yt_cookie ,
+                  },
+                },
+        },
+            },
+        });
+
         await collected.deferUpdate();
         await collected.editReply({ embeds: [searchEmbed], components: [] });
        }

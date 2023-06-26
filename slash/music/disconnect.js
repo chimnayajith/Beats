@@ -12,26 +12,26 @@ module.exports = {
 
   async execute(client, interaction) {
     const connection = getVoiceConnection(interaction.member.voice.guild.id);
-    
+    const notConnected = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Not Connected to a voice channel!`);
+    if (!connection) return interaction.reply({embeds : [notConnected]})
+
     const queue = player.nodes.get(interaction.guild.id);
     embed = new EmbedBuilder()
       .setColor("#2f3136")
       .setDescription(
         `<a:tick:889018326255288360>⠀ | ⠀Beats has been \`disconnected\`.`
       );
+    if (queue) {
+      try {
+        queue.node.pause();
+        queue.delete();
+        interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
       connection.destroy();
       interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
-    // if (queue) {
-    //   try {
-    //     queue.node.pause();
-    //     queue.delete();
-    //     interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // } else {
-    //   connection.destroy();
-    //   interaction.reply({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 20000));
-    // }
+    }
   },
 };

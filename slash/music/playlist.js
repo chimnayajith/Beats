@@ -4,10 +4,13 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   StringSelectMenuBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const playlists = require("../../models/playlist");
 const pretty = require("pretty-ms");
 const { QueryType , Track} = require("discord-player");
+const axios = require('axios') 
+const { joinVoiceChannel } = require("@discordjs/voice");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -122,7 +125,9 @@ module.exports = {
           { name: "Duration", value: `\`${duration}\``, inline: true }
         );
       interaction.reply({ embeds: [saved] });
-    } else if (interaction.options.getSubcommand() === "load") {
+    } 
+    
+    else if (interaction.options.getSubcommand() === "load") {
       const dataQuery = await playlists.find({ userID: interaction.user.id });
       const allData = dataQuery.map((data) => {
         data;
@@ -165,6 +170,7 @@ module.exports = {
         .setCustomId("plMenu")
         .setMaxValues(1)
         .setMinValues(1);
+
       const mRow = new ActionRowBuilder().addComponents(menu);
 
       const msg = await interaction.reply({
@@ -227,6 +233,13 @@ module.exports = {
             collected1.deferUpdate();
 
             if (collected1.customId === "play") {
+              const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
+              if (!interaction.member.voice.channel.joinable) return interaction.editReply({embeds : [noPermission] , components : []});
+              joinVoiceChannel({
+                channelId: interaction.member.voice.channel.id,
+                guildId: interaction.channel.guild.id,
+                adapterCreator: interaction.channel.guild.voiceAdapterCreator,  
+              });
               const loading = new EmbedBuilder()
                 .setColor("2f3136")
                 .setDescription(
@@ -335,6 +348,8 @@ module.exports = {
                   await playlists.deleteOne({
                     _id: dataQuery[0]._id,
                   });
+                  axios.post(`https://api.beatsbot.in/api/playlists/image/delete?id=${dataQuery[0]._id}`)
+
                   collected2.deferUpdate();
                   const deleted = new EmbedBuilder()
                     .setColor("#2f3136")
@@ -401,6 +416,13 @@ module.exports = {
               collected1.deferUpdate();
 
               if (collected1.customId === "play") {
+                const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
+                if (!interaction.member.voice.channel.joinable) return interaction.editReply({embeds : [noPermission], components : []});
+                joinVoiceChannel({
+                  channelId: interaction.member.voice.channel.id,
+                  guildId: interaction.channel.guild.id,
+                  adapterCreator: interaction.channel.guild.voiceAdapterCreator,
+                });
                 const loading = new EmbedBuilder()
                   .setColor("2f3136")
                   .setDescription(
@@ -509,9 +531,13 @@ module.exports = {
                 });
                 del.on("collect", async (collected2) => {
                   if (collected2.customId === "confirm") {
+                    //delete playlist
                     await playlists.deleteOne({
                       _id: dataQuery[1]._id,
                     });
+
+                    //delete playlist image!
+                    axios.post(`https://api.beatsbot.in/api/playlists/image/delete?id=${dataQuery[1]._id}`)
                     collected2.deferUpdate();
                     const deleted = new EmbedBuilder()
                       .setColor("#2f3136")

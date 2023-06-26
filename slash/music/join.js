@@ -10,6 +10,9 @@ module.exports = {
   utilisation: "/join",
 
   async execute(client, interaction) {
+    const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
+    if (!interaction.member.voice.channel.joinable) return interaction.reply({embeds : [noPermission]});
+
     joinVoiceChannel({
       channelId: interaction.member.voice.channel.id,
       guildId: interaction.channel.guild.id,

@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const likedSongs = require("../../utils/likedUtil")
 const { QueryType , Track } = require("discord-player");
+const { joinVoiceChannel } = require("@discordjs/voice");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,7 +21,13 @@ module.exports = {
     const noLiked = new EmbedBuilder().setColor("#2f3136").setDescription("<a:warn:889018313143894046> ⠀|⠀ You have no Liked Songs!")
     if (data === null) return interaction.reply({embeds : [noLiked] , ephemeral : true})
     
-
+    const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
+    if (!interaction.member.voice.channel.joinable) return interaction.reply({embeds : [noPermission]});
+    joinVoiceChannel({
+      channelId: interaction.member.voice.channel.id,
+      guildId: interaction.channel.guild.id,
+      adapterCreator: interaction.channel.guild.voiceAdapterCreator,  
+    });
     const loadingLiked = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:loading:889018179471441941>⠀ | ⠀Loading your \`Liked Songs (${data.length} tracks).\``)
 
     const tracks = [];

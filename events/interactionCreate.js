@@ -15,7 +15,7 @@ module.exports = async (client, interaction) => {
       .setColor("Random")
       .setDescription(`:microphone2:⠀ | ⠀Join a voice channel first!`);
     const embed2 = new EmbedBuilder()
-      .setColor("Random")
+      .setColor("#2f3136")
       .setDescription(
         `<a:warn:889018313143894046> ⠀|⠀ You are in a different voice channel`
       );

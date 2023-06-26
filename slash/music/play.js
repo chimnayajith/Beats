@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
 const { QueryType } = require("discord-player");
 const { showNotif} = require("../../utils/notifUtil")
+const { joinVoiceChannel } = require("@discordjs/voice");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("play")
@@ -19,6 +21,9 @@ module.exports = {
   async execute(client, interaction) {
     const query = interaction.options.get("query").value;
 
+    const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
+    if (!interaction.member.voice.channel.joinable) return interaction.reply({embeds : [noPermission]});
+
     const searchResult = await player.search(query, {
       requestedBy: interaction.member,
       searchEngine: QueryType.AUTO,
@@ -32,6 +37,12 @@ module.exports = {
       .setDescription(`:mag:⠀ | ⠀No results found.`);
     
     if (!searchResult || !searchResult.tracks.length) return interaction.editReply({ embeds: [no_result], ephemeral: true });
+    joinVoiceChannel({
+      channelId: interaction.member.voice.channel.id,
+      guildId: interaction.channel.guild.id,
+      adapterCreator: interaction.channel.guild.voiceAdapterCreator,  
+    });
+
     player.play(interaction.member.voice.channel.id, searchResult, {
       requestedBy: interaction.user,
         nodeOptions: {
