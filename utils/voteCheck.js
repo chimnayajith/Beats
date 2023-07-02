@@ -5,8 +5,8 @@ exports.checkVoted = async ( userId ) => {
     let data = await votes.findOne({
         discord_id : userId
     });
-
-    return data === null ? false : true;
+    const voted = data ? true : false;
+    return voted;
 };
 
 
