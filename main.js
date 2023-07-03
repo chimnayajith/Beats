@@ -7,6 +7,7 @@ global.client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent, 
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.GuildMessageReactions,
@@ -32,10 +33,15 @@ loadData();
 require("./src/loader");
 require("./src/slashloader");
 require("./src/guildslash");
+require("./src/voteReminder");
+
 
 require("./mongodb/beats-bot")
 require("./mongodb/beats-web")
 
+
+//Socket.io connection
+require("./src/socket-io")   
 
 //Error Handling
 // process.on("unhandledRejection", (reason, p) => {

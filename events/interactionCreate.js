@@ -5,8 +5,7 @@ const axios = require('axios');
 module.exports = async (client, interaction) => {
   if (interaction.isAutocomplete()) {
     const cmd = await client.slashCommands.get(interaction.commandName);
-    console.log('test')
-   cmd.autocomplete(interaction);
+    cmd.autocomplete(interaction);
   }
   if (interaction.isCommand()) {
     //   const maintenance =  new EmbedBuilder()
