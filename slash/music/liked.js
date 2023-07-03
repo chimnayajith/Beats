@@ -69,6 +69,7 @@ module.exports = {
         metadata: {
               interaction : interaction,
         },
+        noEmitInsert: true,
         volume: 50,
         selfDeaf: true,
         leaveOnEmpty: true,

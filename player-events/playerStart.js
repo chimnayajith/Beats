@@ -151,12 +151,13 @@ module.exports = async (queue , track ) => {
         const switchint = parseInt(select) ;
         // queue.addTrack(relatedTracks.tracks[switchint])
 
-        player.play(interaction.member.voice.channel.id, relatedTracks.tracks[switchint], {
-          requestedBy: interaction.user,
+        player.play(collected.member.voice.channel.id, relatedTracks.tracks[switchint], {
+          requestedBy: collected.user,
             nodeOptions: {
               metadata:{
-                interaction : interaction,
+                interaction : collected,
                },
+               noEmitInsert: true,
               volume: 50,
               selfDeaf: true,
               leaveOnEmpty: true,

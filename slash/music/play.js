@@ -13,10 +13,29 @@ module.exports = {
         .setName("query")
         .setDescription("🎶 What song or playlist would you like to listen to?")
         .setRequired(true)
+        .setAutocomplete(true)
     ),
   voiceChannel: true,
   category: "Music",
   utilisation: "/play <song name/url>",
+
+  async autocomplete(interaction) {
+    const focusedValue = interaction.options.getFocused();
+    if (focusedValue.length > 0) {
+      const result = await player.search(focusedValue);
+      if (!result.playlist) {
+        await interaction.respond(
+          result.tracks.slice(0, 6).map(track => ({ name: `${track.title.length > 50 ? track.title.substring(0, 45) + '...' : track.title} by ${track.author.length > 50 ? track.author.substring(0, 45) + '...' : track.author}`, value: track.url })),
+        );
+      }
+      else {
+        await interaction.respond(
+          result.tracks.slice(0, 1).map(() => ({name : `Playlist : ${result.playlist.title}` , value : result.playlist.url})),
+        );
+      }
+    }
+  },
+
 
   async execute(client, interaction) {
     const query = interaction.options.get("query").value;
@@ -49,6 +68,7 @@ module.exports = {
           metadata:{
             interaction : interaction,
            },
+          noEmitInsert: true,
           volume: 50,
           selfDeaf: true,
           leaveOnEmpty: true,
