@@ -2,7 +2,7 @@ const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , StringSelectMenuBuilder}
 //Empty voice channel
 module.exports = async (queue) => {
     const empty = new EmbedBuilder()
-    .setColor("#2f13136")
+    .setColor("#2f3136")
     .setTitle(":thought_balloon: ⠀ | ⠀Leaving due to inactivity")
     .setDescription("Hope you had a good time listening.");
     const vote_patreon = new ActionRowBuilder()
