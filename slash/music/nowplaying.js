@@ -49,6 +49,8 @@ module.exports = {
       .setDescription(
         `⠀\n${queue.node.createProgressBar({
           indicator: "<:greendot:889018164694904872>",
+          leftChar : "<:played:1125310974585475122>",
+          rightChar : "<:unplayed:1125310972119220295>",
           timecodes: true,
         })}⠀\n⠀\n`
       );
