@@ -18,7 +18,7 @@ module.exports = {
     for (const serverId of keys) {   
         const queue = player.nodes.get(serverId);    
         if (!queue) { 
-            const connection = await getVoiceConnection(serverId);
+            const connection = await  getVoiceConnection(serverId);
             connection.destroy();
         } else if (queue) {
             const maintenance = new EmbedBuilder().setColor("#2f3136").setDescription(`Beats is scheduled for a brief restart to implement important maintenance changes. During this time, your music queue will be interrupted. We apologize for any inconvenience caused. The restart will be completed as quickly as possible to ensure improved performance and new features.\n\nThank you for your understanding and continued support! <:beats:1115516004886388736>:blue_heart: `).setTitle('Restarting for Maintenance').setThumbnail('https://media.discordapp.net/attachments/889016433252634657/1056207020128219186/wdK4HwhYAAAAASUVORK5CYII.png');
