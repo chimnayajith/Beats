@@ -1,6 +1,9 @@
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , StringSelectMenuBuilder} = require("discord.js");
 const {addSongs}  = require("../utils/likedUtil");
 const recents  = require("../utils/recentUtil");
+const { SpotifyExtractor } = require('@discord-player/extractor');
+
+const spotifyExtractor = player.extractors.get(SpotifyExtractor.identifier);
 
 module.exports = async (queue , track ) => {
   recents.addRecents(track.requestedBy.id , queue.options.guild.id , track)
@@ -70,7 +73,7 @@ module.exports = async (queue , track ) => {
             break;
       }
    } else if ( collected.customId === 'suggestions'){
-    const relatedTracks = await track.extractor.getRelatedTracks(track);
+    const relatedTracks = await track.extractor.getRelatedTracks(track) || await spotifyExtractor.getRelatedTracks(queue.currentTrack);
     
     const searchEmbed = new EmbedBuilder()
       .setColor("#2f3136")
