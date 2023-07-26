@@ -1,4 +1,4 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , StringSelectMenuBuilder} = require("discord.js");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder ,PermissionFlagsBits, StringSelectMenuBuilder} = require("discord.js");
 
 //Event for tracks/playlists being added to queue
 module.exports = async (queue , tracks ) => {
@@ -19,6 +19,8 @@ module.exports = async (queue , tracks ) => {
         inline: true,
       }
     );
-  queue.metadata.interaction.channel.send({ embeds: [tracksAdd] }).then((message) => setTimeout(() => message.delete(), 20000)) ||
-    queue.connection.channel.send({ embeds: [tracksAdd] }).then((message) => setTimeout(() => message.delete(), 20000));
+    if(queue.metadata.interaction.guild.members.me.permissionsIn(queue.metadata.interaction.channel).has([PermissionFlagsBits.SendMessages , PermissionFlagsBits.ViewChannel , PermissionFlagsBits.EmbedLinks])
+) {
+       queue.metadata.interaction.channel.send({ embeds: [tracksAdd] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
+    }
 };

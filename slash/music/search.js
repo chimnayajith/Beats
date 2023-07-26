@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const {EmbedBuilder,ButtonBuilder,StringSelectMenuBuilder,ActionRowBuilder} = require("discord.js");
+const {EmbedBuilder,ButtonBuilder,StringSelectMenuBuilder,ActionRowBuilder,PermissionFlagsBits} = require("discord.js");
 const { QueryType } = require("discord-player");
+const { joinVoiceChannel } = require("@discordjs/voice");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,6 +37,18 @@ module.exports = {
 
      if (!searchResult || !searchResult.tracks.length) return interaction.editReply({ embeds: [noResult] ,  ephemeral:true});
      
+     const channelNoPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀\`Send Messages\` or \`View Channel\` permission denied for Beats in this channel.`);
+     if(!interaction.guild.members.me.permissionsIn(interaction.channel).has([PermissionFlagsBits.SendMessages , PermissionFlagsBits.ViewChannel])) return interaction.reply({embeds : [channelNoPermission]}).then((interaction) => setTimeout(() => interaction.delete().catch(console.error), 15000));
+
+      const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
+      if (!interaction.member.voice.channel.joinable) return interaction.editReply({embeds : [noPermission] , components : []});
+      
+      joinVoiceChannel({
+        channelId: interaction.member.voice.channel.id,
+        guildId: interaction.channel.guild.id,
+        adapterCreator: interaction.channel.guild.voiceAdapterCreator,  
+      });
+
      const loading = new EmbedBuilder().setColor("#2f3136").setTitle(`<a:loading:889018179471441941>⠀ | ⠀Loading your track...`);
      function play(track){
         
@@ -46,6 +59,7 @@ module.exports = {
                 interaction : interaction,
                },
                noEmitInsert: true,
+               skipOnNoStream: true,
                volume: 50,
                selfDeaf: true,
                leaveOnEmpty: true,
@@ -116,7 +130,7 @@ module.exports = {
 
     const dmRow = new ActionRowBuilder().addComponents(dMenu);
 
-    msg.edit({ embeds: [searchEmbed], components: [mRow, cRow] });
+    interaction.editReply({ embeds: [searchEmbed], components: [mRow, cRow] });
 
     const collector = msg.createMessageComponentCollector({
       filter: ({ user }) => user.id === interaction.user.id,

@@ -1,4 +1,4 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , StringSelectMenuBuilder} = require("discord.js");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , StringSelectMenuBuilder,PermissionFlagsBits} = require("discord.js");
 
 //Bot disconnected from voice channel
 module.exports = async (queue) => {
@@ -23,15 +23,10 @@ module.exports = async (queue) => {
         .setEmoji(`<:patreon:956903191507763240>`)
         .setStyle(5)
     );
-
-    queue.node.setPaused();
   queue.delete();
-  queue.metadata.interaction.channel.send({
-    embeds: [exhaust],
-    components: [vote_patreon],
-  }).then((message) => setTimeout(() => message.delete(), 30000)) ||
-    queue.connection.channel.send({
-      embeds: [exhaust],
-      components: [vote_patreon],
-    }).then((message) => setTimeout(() => message.delete(), 30000));
+  if(queue.metadata.interaction.guild.members.me.permissionsIn(queue.metadata.interaction.channel).has([PermissionFlagsBits.SendMessages , PermissionFlagsBits.ViewChannel , PermissionFlagsBits.EmbedLinks])
+) {
+    queue.metadata.interaction.channel.send({embeds: [exhaust],components: [vote_patreon]})
+      .then((message) => setTimeout(() => message.delete().catch(console.error), 30000));
+  }
 };
