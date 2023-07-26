@@ -3,7 +3,8 @@ const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , AttachmentBuilder} = req
 const { createCanvas, loadImage } = require('canvas');
 const {Chart , registerables} = require('chart.js');
 Chart.register(...registerables);
-const analytics = require('../models/analytics')
+const analytics = require('../models/analytics');
+const commands = require('../models/commandSchema');
 const moment = require('moment');
 
 module.exports = {
@@ -17,22 +18,22 @@ module.exports = {
         .addChoices(
           { name: "Server Count", value: "server" },
           { name: "User Count", value: "user" },
+          { name: "Command Usage" , value : "command"}
         )
         .setRequired(true)
     ),
 
   voiceChannel: false,
   vote: false,
-  category: "",
+  category: "Staff",
   utilisation: "",
 
   async execute(client, interaction) {
 
-    const data = await analytics.find({});
     const input = interaction.options.get("option").value;
-
+    await interaction.deferReply()
     if (input === 'server') {
-        await interaction.deferReply()
+        const data = await analytics.find({});
 
         const serverGraph = {};
 
@@ -45,8 +46,8 @@ module.exports = {
             }
         });
     
-        const uniqueDates = Object.keys(serverGraph);
-        const highestServerCounts = Object.values(serverGraph);
+        const uniqueDates = Object.keys(serverGraph).slice(-7);
+        const highestServerCounts = Object.values(serverGraph).slice(-7);
 
         const canvas = createCanvas(800, 600);//server
 
@@ -62,6 +63,8 @@ module.exports = {
                 data: highestServerCounts,
                 borderColor: '#23b9c4', //'#e73d7d',
                 tension: 0.5 ,
+                fill : true,
+                backgroundColor: 'rgba(75, 192, 192, 0.4)', // Set fill color
                 },
             ],
             },
@@ -83,7 +86,7 @@ module.exports = {
         interaction.editReply({embeds : [embed] ,  files : [attachment]})
 
     } else if (input === 'user'){
-        await interaction.deferReply()
+        const data = await analytics.find({});
 
         const userGraph = {};
 
@@ -96,8 +99,8 @@ module.exports = {
             }
         });
     
-        const uniqueDates = Object.keys(userGraph);
-        const highestUserCounts = Object.values(userGraph);
+        const uniqueDates = Object.keys(userGraph).slice(-7);
+        const highestUserCounts = Object.values(userGraph).slice(-7);
         const canvas = createCanvas(800, 600);//user
 
         const ctx = canvas.getContext('2d');
@@ -112,6 +115,7 @@ module.exports = {
                 data: highestUserCounts,
                 borderColor: '#23b9c4', //'#e73d7d',
                 tension: 0.5 ,
+                
                 },
             ],
             },
@@ -132,6 +136,46 @@ module.exports = {
 
         await interaction.editReply({embeds : [embed] ,  files : [attachment]})
 
+    } else if (input === 'command'){
+      const data = await commands.find({} , "_id usageCount")
+
+      data.sort((a, b) => b.usageCount - a.usageCount);
+      const commandNames = data.map(item => item._id);
+      const usageCounts = data.map(item => item.usageCount);
+
+      const canvas = createCanvas(800, 600);//server
+
+      const ctx = canvas.getContext('2d');
+
+      const chartConfig = {
+          type: 'bar',
+          data: {
+          labels: commandNames,
+          datasets: [
+              {
+              label: 'Usage Count',
+              data: usageCounts,
+              borderColor: '#23b9c4', //'#e73d7d',
+              backgroundColor: 'rgba(75, 192, 192, 0.4)', // Set fill color
+              },
+          ],
+          },
+          options: {
+              plugins: {
+                backgroundColor: '#23b9c4', // Set the desired background color
+              }
+            },
+      };
+
+      const chart = new Chart(ctx, chartConfig);
+
+      const chartImage = canvas.toBuffer('image/png');
+
+      const attachment = new AttachmentBuilder(chartImage, { name: 'server.png' });
+
+      const embed = new EmbedBuilder().setColor("#2f3136").setTitle('Command Usage Analytics').setImage(`attachment://${attachment.name}`);
+
+      interaction.editReply({embeds : [embed] ,  files : [attachment]})
     }
   },
 };

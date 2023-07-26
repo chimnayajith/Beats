@@ -13,7 +13,7 @@ manager.on('shardCreate', shard => {
     shard.on(ShardEvents.Ready, () => {
         readyShards.add(shard.id);
         if(readyShards.size === manager.totalShards) {
-            manager.broadcastEval(client => client.emit('allShardsReady'));
+            manager.broadcastEval(client => client.emit('allShardsReady') , {shard : 0});
         }
     });
 });

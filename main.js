@@ -1,5 +1,5 @@
 const { Player } = require("discord-player");
-const { Client, GatewayIntentBits, Partials } = require("discord.js");
+const { Client, GatewayIntentBits, Partials  , Options , WebhookClient , EmbedBuilder} = require("discord.js");
 process.env.FFMPEG_PATH = require('ffmpeg-static')
 
 global.client = new Client({
@@ -10,12 +10,26 @@ global.client = new Client({
     GatewayIntentBits.MessageContent, 
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.GuildMessageReactions,
   ],
-  partials: [Partials.Channel],
+  partials: [Partials.Channel , Partials.GuildMember],
   disableMentions: "everyone",
 });
 module.exports.bot = client;
+
+// client.rest.on('rateLimited', async (data) => {
+//   const embed = new EmbedBuilder().setColor('#2f3136').setTitle('Ratelimited')
+//   .addFields([
+//       {name: 'Timeout Duration', value: data.timeToReset.toString(), inline: true},
+//       {name: 'Max Limit', value: data.limit.toString(), inline: true},
+//       {name: 'Method', value: data.method, inline: true},
+//       {name: 'Path', value: data.majorParameter, inline: true},
+//       {name: 'Route', value: data.route, inline: true},
+//       {name: 'Global?', value: data.global, inline: true}
+//   ]).setTimestamp();
+
+//     const webhookClient = new WebhookClient({url : "https://discord.com/api/webhooks/1121858697812000838/63nYVPjOrhBM3xGh50peX_PRSKg18iuSX1982CBLIHYCXNBceM01tPfr1aluom4EyZOm"});
+//     webhookClient.send({content : "<@&889559572510023791>" , embeds : [embed]});
+// });
 
 client.config = require("./config");
 
@@ -56,9 +70,4 @@ require("./src/socket-io")
 //   console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
 //   console.log(err, origin);
 // });
-// process.on("multipleResolves", (type, promise, reason) => {
-//   console.log(" [antiCrash] :: Multiple Resolves");
-//   console.log(type, promise, reason);
-// });
-
 client.login("OTA1MTQ4MTI5MjE1NjY4MjU0.GiZ9QU.XBJ5mNZl8kVKW_0ADzjxf8J1P70ksFrmMqZDBo");

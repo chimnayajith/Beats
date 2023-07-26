@@ -9,7 +9,7 @@ module.exports = {
 
   voiceChannel: false,
   vote: false,
-  category: "Admin",
+  category: "Staff",
   utilisation: "/maintenance",
 
   async execute(client, interaction) {
