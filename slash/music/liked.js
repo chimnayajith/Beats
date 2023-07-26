@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, PermissionFlagsBits } = require("discord.js");
 const likedSongs = require("../../utils/likedUtil")
 const { QueryType , Track } = require("discord-player");
 const { joinVoiceChannel } = require("@discordjs/voice");
@@ -21,8 +21,11 @@ module.exports = {
     const noLiked = new EmbedBuilder().setColor("#2f3136").setDescription("<a:warn:889018313143894046> ⠀|⠀ You have no Liked Songs!")
     if (data === null) return interaction.reply({embeds : [noLiked] , ephemeral : true})
     
+    const channelNoPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀\`Send Messages\` or \`View Channel\`permission denied for Beats in this channel.`);
+    if(!interaction.guild.members.me.permissionsIn(interaction.channel).has([PermissionFlagsBits.SendMessages , PermissionFlagsBits.ViewChannel])) return interaction.reply({embeds : [channelNoPermission]}).then((interaction) => setTimeout(() => interaction.delete().catch(console.error), 15000));
+    
     const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
-    if (!interaction.member.voice.channel.joinable) return interaction.reply({embeds : [noPermission]});
+    if (!interaction.member.voice.channel.joinable) return interaction.reply({embeds : [noPermission]}).then((interaction) => setTimeout(() => interaction.delete().catch(console.error), 10000));
     joinVoiceChannel({
       channelId: interaction.member.voice.channel.id,
       guildId: interaction.channel.guild.id,
@@ -93,9 +96,9 @@ module.exports = {
 
        queue.addTrack(playlist)
        queue.node.play()
-      interaction.reply({embeds: [loadingLiked]}).then((interaction) => setTimeout(() => interaction.delete(), 5000));
+      interaction.reply({embeds: [loadingLiked] , ephemeral : true})//.then((interaction) => setTimeout(() => interaction.delete().catch(console.error), 5000));
     } else{
-      interaction.reply({embeds: [loadingLiked]}).then((interaction) => setTimeout(() => interaction.delete(), 5000));
+      interaction.reply({embeds: [loadingLiked] , ephemeral : true})//.then((interaction) => setTimeout(() => interaction.delete().catch(console.error), 5000));
       queue.addTrack(playlist.tracks)
     }
   },

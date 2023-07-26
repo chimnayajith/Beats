@@ -4,7 +4,7 @@ const { EmbedBuilder } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("jump")
-    .setDescription("Jump to particular song in the queue")
+    .setDescription("Jump to particular position in the queue")
     .addIntegerOption((option) =>
       option
         .setName("track")
@@ -33,6 +33,6 @@ module.exports = {
     queue.node.jump(position - 1);
 
     const jumpSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ | ⠀Jumped to position ${position}: **${song.title}**`);
-    interaction.reply({ embeds: [jumpSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
+    interaction.reply({ embeds: [jumpSuccess] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
   },
 };

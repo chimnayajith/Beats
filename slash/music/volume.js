@@ -13,6 +13,7 @@ module.exports = {
         .setRequired(false)
     ),
   voiceChannel: true,
+  vote : true,
   category: "Music",
   utilisation: "/volume <1-200>",
 
@@ -50,7 +51,7 @@ module.exports = {
 
       return interaction.reply(
         success ? { embeds: [volumeSuccess] } : { embeds: [errorEmbed], ephemeral: true }
-      ).then((message) => setTimeout(() => message.delete(), 20000));
+      ).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
     }
   },
 };

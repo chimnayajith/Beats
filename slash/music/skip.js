@@ -18,13 +18,17 @@ module.exports = {
     const error = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Something went wrong..Try Again**`);
 
     if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [no_music], ephemeral: true });
-
-    if (!queue.tracks.toArray()[0]) return interaction.reply({ embeds: [no_next], ephemeral: true });
+    const disconnected = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ | ⠀Queue Empty. Beats has been \`disconnected\`.`);
+    if (!queue.tracks.toArray()[0]) {
+      queue.delete();
+      interaction.reply({ embeds: [disconnected]  })
+      return;
+    }
 
     const success = queue.node.skip();  
 
     return interaction.reply(
       success ? { embeds: [skipped] } : { embeds: [error], ephemeral: true }
-    ).then((message) => setTimeout(() => message.delete(), 20000));
+    ).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
   },
 };

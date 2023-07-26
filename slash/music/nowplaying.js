@@ -27,7 +27,9 @@ module.exports = {
         { name: "Channel", value: `\`${track.author}\``, inline: true },
         {
           name: "Views",
-          value: `\`${abbreviateNumber(track.views, 2, {
+          // value: `\`${abbreviateNumber((track.views === 0) ? track.metadata.bridge.views || 0 : track.views , 2, {
+          value: `\`${abbreviateNumber(track.views, {
+
             symbols: ["", " K", " M", " B"],
           })}\``,
           inline: true,
@@ -58,7 +60,7 @@ module.exports = {
       new ButtonBuilder()
         .setCustomId("shuffle")
         .setLabel(" ")
-        .setStyle(2)
+        .setStyle(2) 
         .setEmoji("🔀"),
 
       new ButtonBuilder()
@@ -68,7 +70,7 @@ module.exports = {
         .setEmoji("⏮"),
       new ButtonBuilder()
         .setCustomId("pause")
-        .setLabel("<:pause:1105337419710091316>  ")
+        .setLabel(" ")
         .setStyle(2)
         .setEmoji("⏸"),
 
@@ -85,6 +87,6 @@ module.exports = {
         .setEmoji("⏹")
     );
 
-    interaction.reply({ embeds: [embed2] , components: [row]});
+    interaction.reply({ embeds: [embed2] ,  components : [row]});
   },
 };

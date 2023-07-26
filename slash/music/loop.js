@@ -39,11 +39,11 @@ module.exports = {
       if (queue.repeatMode !== 0) {
         if (queue.repeatMode === 1) {
           queue.setRepeatMode(0);
-          interaction.reply({ embeds: [trackUnlooped] }).then((message) => setTimeout(() => message.delete(), 20000));
+          interaction.reply({ embeds: [trackUnlooped] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
         }
         if (queue.repeatMode === 2) {
           queue.setRepeatMode(0);
-          interaction.reply({ embeds: [queueUnlooped] }).then((message) => setTimeout(() => message.delete(), 20000));
+          interaction.reply({ embeds: [queueUnlooped] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
         }
       } else {
         interaction.reply({ embeds: [noLoops], ephemeral: true });

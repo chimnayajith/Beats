@@ -36,11 +36,9 @@ module.exports = {
     for (let i = 0; i <= tracks.length - 1; i++) {
       const track = tracks[i];
       if (songs.includes(track.url)) {
-        console.log(`duplicated track found at ${i}`)
-        queue.removeTrack(i);
+        queue.tracks.removeOne((t) => t.id === track.id , true)
         dups++;
       } else {
-        console.log(`new track at ${i}`)
         songs.push(track.url, track);
       }
     }

@@ -11,6 +11,7 @@ module.exports = {
         .setDescription("Audio Filter")
         .setRequired(true)
         .addChoices(
+          { name: "Disable", value: "disable" },
           { name: "Lofi", value: "lofi" },
           { name: "Bassboost", value: "bassboost" },
           { name: "8D", value: "8D" },
@@ -47,16 +48,28 @@ module.exports = {
     const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
     if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
-    const enableFilter = new EmbedBuilder().setColor("#2f3136").setDescription(`**:musical_note:⠀ |⠀ Enabling filter ${input.charAt(0).toUpperCase() + input.slice(1)}.Please Wait**`);
-    const disableFilter = new EmbedBuilder().setColor("#2f3136").setDescription(`**:musical_note:⠀ |⠀ Disabling filter ${input.charAt(0).toUpperCase() + input.slice(1)}.Please Wait**`);
-    await interaction.deferReply()
-
-    if(queue.filters.ffmpeg.isEnabled(input)){
-      await queue.filters.ffmpeg.setFilters(false)
-      interaction.editReply({embeds : [disableFilter]}).then((message) => setTimeout(() => message.delete(), 20000));
+    if(input === 'disable'){
+      const enabled = queue.filters.ffmpeg.getFiltersEnabled();
+      const noFiltersEnabled = new EmbedBuilder().setColor("#2f3136").setDescription(`**:musical_note:⠀ |⠀ No Filters Enabled!**`);
+      if ( enabled.length === 0 ) return interaction.reply({embeds : [noFiltersEnabled] , ephemeral : true});
+      await interaction.deferReply();
+      await queue.filters.ffmpeg.setFilters(false);
+      const disabledFilter = new EmbedBuilder().setColor("#2f3136").setDescription(`**:musical_note:⠀ |⠀ Disabling filter : \`${enabled[0].charAt(0).toUpperCase() + enabled[0].slice(1)}\`.Please Wait**`);
+      interaction.editReply({embeds : [disabledFilter] , ephemeral : true}).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
+      return;
     } else {
-      await queue.filters.ffmpeg.setFilters([input])
-      interaction.editReply({embeds : [enableFilter]})
+      const enableFilter = new EmbedBuilder().setColor("#2f3136").setDescription(`**:musical_note:⠀ |⠀ Enabling filter ${input.charAt(0).toUpperCase() + input.slice(1)}.Please Wait**`);
+      const disableFilter = new EmbedBuilder().setColor("#2f3136").setDescription(`**:musical_note:⠀ |⠀ Disabling filter ${input.charAt(0).toUpperCase() + input.slice(1)}.Please Wait**`);
+      await interaction.deferReply()
+
+      if(queue.filters.ffmpeg.isEnabled(input)){
+        await queue.filters.ffmpeg.setFilters(false)
+        interaction.editReply({embeds : [disableFilter]}).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
+      } else {
+        await queue.filters.ffmpeg.setFilters([input])
+        interaction.editReply({embeds : [enableFilter]})
+      }
     }
+      
   },
 };

@@ -10,6 +10,7 @@ module.exports = {
   utilisation: "/join",
 
   async execute(client, interaction) {
+    
     const noPermission = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:warn:889018313143894046>⠀ | ⠀Voice channel access denied for Beats.`);
     if (!interaction.member.voice.channel.joinable) return interaction.reply({embeds : [noPermission]});
 
@@ -22,9 +23,7 @@ module.exports = {
 
     const joinembed = new EmbedBuilder()
       .setColor("#2f3136")
-      .setDescription(
-        `<a:tick:889018326255288360>⠀ | ⠀Joined voice channel <#${interaction.member.voice.channel.id}>`
-      );
-    interaction.reply({ embeds: [joinembed] }).then((message) => setTimeout(() => message.delete(), 20000));
+      .setDescription(`<a:tick:889018326255288360>⠀ | ⠀Joined voice channel <#${interaction.member.voice.channel.id}>`);
+    interaction.reply({ embeds: [joinembed] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
   },
 };

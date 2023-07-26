@@ -44,6 +44,6 @@ module.exports = {
       .setColor("#2f3136")
       .setDescription(`:wastebasket: ⠀|⠀ **${song.title}** removed from queue`);
 
-    interaction.reply({ embeds: [embed4] }).then((message) => setTimeout(() => message.delete(), 20000));
+    interaction.reply({ embeds: [embed4] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
   },
 };

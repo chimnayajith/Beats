@@ -20,7 +20,7 @@ module.exports = {
 
     await queue.tracks.clear();
 
-    const clearSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`**🗑️ ⠀|⠀ Queue cleared**`);
-    interaction.reply({ embeds: [clearSuccess] }).then((message) => setTimeout(() => message.delete(), 20000));
+    const clearSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`**🗑️ ⠀|⠀ Queue cleared. </disconnect:957138913833668634> to clear the current track**`);
+    interaction.reply({ embeds: [clearSuccess] }).then((message) => setTimeout(() => message.delete().catch(console.error), 3000));
   },
 };

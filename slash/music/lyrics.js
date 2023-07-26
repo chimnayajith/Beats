@@ -2,7 +2,7 @@ const { EmbedBuilder,ButtonBuilder,  StringSelectMenuBuilder,  ActionRowBuilder,
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { lyricsExtractor } = require('@discord-player/extractor')
 const lyricsClient = lyricsExtractor("OwQvGapg8vzwCdGW6cnk9zh9I_ECJ6QguMu-HVm211__nFNboPERdjbe4tt-RBJM")
-const lyricsFinder = require('lyrics-finder');
+
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,11 +11,12 @@ module.exports = {
     .addStringOption((option) =>
       option.setName("query").setDescription("Song name").setRequired(false)
     ),
-  voiceChannel: true,
-  vote: true,
+  voiceChannel: false,
+  vote: false,
   category: "Music",
   utilisation: "/lyrics <song name>",
   async execute(client, interaction) {
+      
     const queue = player.nodes.get(interaction.guild.id);
     let query = interaction.options.get("query");
 
@@ -45,89 +46,94 @@ module.exports = {
     let pages = [];
     let current = 0;
 
-    const data = await lyricsFinder(query);
-    await console.log(data)
-    // if (!data)
-    //   return interaction.editReply({ embeds: [noresult], ephemeral: true });
-    // const lyrics = await data.lyrics;
-    // const total = Math.ceil(lyrics.length / 1024);
+    const data = await lyricsClient.search(query);
+    if (!data)
+      return interaction.editReply({ embeds: [noresult], ephemeral: true });
+    const lyrics = await data.lyrics;
+    const total = Math.ceil(lyrics.length / 1024);
 
-    // for (let i = 0; i < lyrics.length; i += 1024) {
-    //   let lyricpage = lyrics.substr(i, Math.min(lyrics.length, i + 1024));
-    //   pageno = Math.floor(i / 1024);
-    //   const page = new EmbedBuilder()
-    //     .setTitle(`LYRICS | ${data.fullTitle}`)
-    //     .setThumbnail(data.thumbnail)
-    //     .setDescription(lyricpage)
-    //     .setFooter({ text: `Page : ${pageno + 1}/${total}` });
-    //   pages.push(page);
-    // }
-    // const prev = new ButtonBuilder()
-    //   .setEmoji("<:left_arroe:901325048189698078>")
-    //   .setStyle(2)
-    //   .setCustomId("prev_page");
-    // const stop = new ButtonBuilder()
-    //   .setEmoji(`⛔`)
-    //   .setStyle(4)
-    //   .setCustomId("cancel_btn");
-    // const next = new ButtonBuilder()
-    //   .setEmoji(`<:right_arroe:901325048261005322>`)
-    //   .setStyle(2)
-    //   .setCustomId("next_page");
-    // const row = new ActionRowBuilder().addComponents([prev, stop, next]);
+    for (let i = 0; i < lyrics.length; i += 1024) {
+      let lyricpage = lyrics.substr(i, Math.min(lyrics.length, i + 1024));
+      pageno = Math.floor(i / 1024);
+      const page = new EmbedBuilder()
+        .setTitle(`LYRICS | ${data.fullTitle}`)
+        .setThumbnail(data.thumbnail)
+        .setDescription(lyricpage)
+        .setFooter({ text: `Page : ${pageno + 1}/${total}` });
+      pages.push(page);
+    }
+    const prev = new ButtonBuilder()
+      .setEmoji("<:left_arroe:901325048189698078>")
+      .setStyle(2)
+      .setCustomId("prev_page");
+    const stop = new ButtonBuilder()
+      .setEmoji(`⛔`)
+      .setStyle(4)
+      .setCustomId("cancel_btn");
+    const next = new ButtonBuilder()
+      .setEmoji(`<:right_arroe:901325048261005322>`)
+      .setStyle(2)
+      .setCustomId("next_page");
+    const row = new ActionRowBuilder().addComponents([prev, stop, next]);
 
-    // const dprev = new ButtonBuilder()
-    //   .setEmoji("<:left_arroe:901325048189698078>")
-    //   .setStyle(2)
-    //   .setCustomId("prev_page")
-    //   .setDisabled();
-    // const dstop = new ButtonBuilder()
-    //   .setEmoji(`⛔`)
-    //   .setStyle(4)
-    //   .setCustomId("cancel_btn")
-    //   .setDisabled();
-    // const dnext = new ButtonBuilder()
-    //   .setEmoji(`<:right_arroe:901325048261005322>`)
-    //   .setStyle(2)
-    //   .setCustomId("next_page")
-    //   .setDisabled();
-    // const drow = new ActionRowBuilder().addComponents([dprev, dstop, dnext]);
-    // const msg = await interaction.editReply({
-    //   embeds: [pages[current]],
-    //   components: [row],
-    //   fetchRreply: true,
-    // });
+    const dprev = new ButtonBuilder()
+      .setEmoji("<:left_arroe:901325048189698078>")
+      .setStyle(2)
+      .setCustomId("prev_page")
+      .setDisabled();
+    const dstop = new ButtonBuilder()
+      .setEmoji(`⛔`)
+      .setStyle(4)
+      .setCustomId("cancel_btn")
+      .setDisabled();
+    const dnext = new ButtonBuilder()
+      .setEmoji(`<:right_arroe:901325048261005322>`)
+      .setStyle(2)
+      .setCustomId("next_page")
+      .setDisabled();
+    const drow = new ActionRowBuilder().addComponents([dprev, dstop, dnext]);
+    const msg = await interaction.editReply({
+      embeds: [pages[current]],
+      components: [row],
+      fetchReply: true,
+    });
 
-    // const collector = msg.createMessageComponentCollector({
-    //   componentType: 2,
-    // });
+    const collector = msg.createMessageComponentCollector({
+      time : 3000 ,
+      componentType: 2,
+    });
 
-    // collector.on("collect", async (collected) => {
-    //   if (collected.customId === "next_page") {
-    //     await collected.deferUpdate();
-    //     if (current < pages.length - 1) {
-    //       current += 1;
-    //       await collected.editReply({
-    //         embeds: [pages[current]],
-    //         components: [row],
-    //       });
-    //     }
-    //   }
-    //   if (collected.customId === "prev_page") {
-    //     await collected.deferUpdate();
-    //     if (current !== 0) {
-    //       current -= 1;
-    //       await collected.editReply({
-    //         embeds: [pages[current]],
-    //         components: [row],
-    //       });
-    //     }
-    //   }
-    //   if (collected.customId === "cancel_btn") {
-    //     await collected.deferUpdate();
-    //     collector.stop();
-    //     await collected.editReply({ components: [drow] });
-    //   }
-    // });
+    collector.on("collect", async (collected) => {
+      if (collected.customId === "next_page") {
+        await collected.deferUpdate();
+        if (current < pages.length - 1) {
+          current += 1;
+          await collected.editReply({
+            embeds: [pages[current]],
+            components: [row],
+          });
+        }
+      }
+      if (collected.customId === "prev_page") {
+        await collected.deferUpdate();
+        if (current !== 0) {
+          current -= 1;
+          await collected.editReply({
+            embeds: [pages[current]],
+            components: [row],
+          });
+        }
+      }
+      if (collected.customId === "cancel_btn") {
+        await collected.deferUpdate();
+        collector.stop();
+        await collected.editReply({ components: [drow] });
+      }
+    });
+    collector.on("end" , async (collected , error) => {
+      if ( error === "time"){
+        interaction.editReply({ components : [drow]})
+      }
+    })
   },
 };

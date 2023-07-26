@@ -21,16 +21,13 @@ module.exports = {
 
     embed = new EmbedBuilder()
       .setColor("#2f3136")
-      .setDescription(
-        `<a:tick:889018326255288360>⠀ | ⠀Beats has been \`disconnected\`.`
-      );
+      .setDescription(`<a:tick:889018326255288360>⠀ | ⠀Beats has been \`disconnected\`.`);
 
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setLabel("Feedback!").setCustomId('feedback').setStyle(ButtonStyle.Secondary)
     )
     if (queue) {
       try {
-        queue.node.pause();
         queue.delete();
       } catch (err) {
         console.log(err);
@@ -38,7 +35,7 @@ module.exports = {
     } else {
       connection.destroy();
     }
-    const msg  = await interaction.reply({ embeds: [embed] ,components : [row] , fetchReply : true })//.then((message) => setTimeout(() => message.delete(), 20000));
+    const msg  = await interaction.reply({ embeds: [embed] ,components : [row] , fetchReply : true })
     
     const collector = msg.createMessageComponentCollector({
       componentType : 2
@@ -61,7 +58,7 @@ module.exports = {
 
     collector.on('collect' , async (collected) => {
       collected.showModal(modal)
-      collected.awaitModalSubmit({time : 3600000}) .then( async modal => {
+      collected.awaitModalSubmit({time : 600000}) .then( async modal => {
         const feedback = modal.fields.getTextInputValue('desc')
         let newdata = await db.create({
           userID: interaction.user.id,
@@ -82,7 +79,7 @@ module.exports = {
 
         const submitted = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ | ⠀Feedback Submitted`);
         modal.reply({embeds : [submitted] , ephemeral: true})
-        }).catch((err) => {
+        }).catch((err) => { 
           const time_error = new EmbedBuilder().setColor("#2f3136").setDescription("<:failed:941027474106613791> ⠀|⠀ The feedback modal timed out.")
           interaction.followUp({embeds : [time_error] , ephemeral : true})
         });
