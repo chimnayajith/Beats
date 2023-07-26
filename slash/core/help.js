@@ -17,9 +17,20 @@ module.exports = {
           "Specify command to see detailed explanation of each command"
         )
         .setRequired(false)
+        .setAutocomplete(true)
     ),
   category: "Infos",
   utilisation: "/help <command name>",
+
+  async autocomplete(interaction) {
+    const focusedValue = interaction.options.getFocused();
+    const choices = client.slashCommands.filter((x) => x.category != "Staff").map((x) =>  x.data.name)
+    const filtered = choices.filter(choice => choice.startsWith(focusedValue)).slice(0,25);
+    await interaction.respond(
+      filtered.map(choice => ({ name: choice, value: choice })),
+    );
+  },
+
 
   async execute(client, interaction) {
     if (!interaction.options.get("command")) {
@@ -29,7 +40,7 @@ module.exports = {
           .setPlaceholder("Choose Category")
           .addOptions([
             {
-              label: "Utility",
+              label: "Utility", 
               description: "Utility commands",
               value: "Utility",
               emoji: "<a:utility:889018312514752532>",
@@ -155,23 +166,21 @@ For eg: /filter 8D\`\`\`\n\n`
 
       collector.on("collect", async (collected) => {
         const value = collected.values[0];
+        await collected.deferUpdate();
         if (collected.user.id !== interaction.user.id)
-          return collected.editReply({
-            content: `:x:  |  That command wasnt for you `,
+          return collected.followUp({
+            embeds : [new EmbedBuilder().setColor("#2f3136").setDescription(`<:huh:897560243624640563>  |  That command wasn't for you`)],
             ephemeral: true,
           });
         if (value === "Utility") {
-          await collected.deferUpdate();
           await collected.editReply({ embeds: [embed1], ephemeral: false });
         }
 
         if (value === "Music") {
-          await collected.deferUpdate();
           await collected.editReply({ embeds: [embed2], ephemeral: false });
         }
 
         if (value === "Filters") {
-          await collected.deferUpdate();
           await collected.editReply({ embeds: [filterlist], ephemeral: false });
         }
       });
@@ -191,7 +200,7 @@ For eg: /filter 8D\`\`\`\n\n`
           ])
       );
       collector.on("end", (async) => {
-        msg.edit({ components: [disabledrow] });
+        interaction.editReply({ components: [disabledrow]});
       });
     } else {
       const query = interaction.options.get("command").value;

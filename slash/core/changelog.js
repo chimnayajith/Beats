@@ -8,16 +8,15 @@ module.exports = {
   category: "Infos",
   utilisation: "/changelog",
 
-  execute(client, message) {
+  execute(client, interaction) {
     const embed1 = new EmbedBuilder()
       .setColor("#2f3136")
-      .setTitle("Changelog - [v3.2.0] ")
+      .setTitle("Changelog - [v3.6.0] ")
       .setDescription(
-        `\`\`\`diff\n+ New Liked Command Added to play the songs you've liked.\n\n+ New Report command to report issues or to give suggestions.\n\n+ New Notification command to check latest changes.\n\n+ Bug Fixes.\`\`\``
+        `\`\`\`diff\n+ New Server Playlist feature.\n\n+ Skipping tracks on the final track now ends the session.\n\n+ \n\n+ Bug Fixes.\`\`\``
       );
-    message.reply({
-      embeds: [embed1],
-      allowedMentions: { repliedUser: false },
+    interaction.reply({
+      embeds: [embed1]
     });
   },
 };

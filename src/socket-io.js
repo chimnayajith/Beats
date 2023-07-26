@@ -2,7 +2,7 @@ const io = require('socket.io-client');
 const { EmbedBuilder } = require("discord.js");
 
 const socket = io('https://api.beatsbot.in/');
-// const socket = io('https://2727-111-92-119-44.ngrok-free.app/');
+// const socket = io('https://beats-beta.vercel.app/');
 
 
 socket.on('connect', () => {
@@ -13,8 +13,6 @@ socket.on('connect', () => {
     // console.log('sending stats to website')
     // socket.emit('stats' , {serverCount : client.guilds.cache.size, userCount: client.guilds.cache.forEach((guild) => {totalMembers += guild.memberCount})})
 // });
-socket.emit("test" , {message : "hii myree kittiyyoo?"})
-
 
 socket.on("statsres", (data ) => {
     console.log("Received data:", data );
@@ -62,14 +60,45 @@ socket.on("/previous", (data ) => {
     }
   })
   
+// showing guilds on dashboard
+
+// socket.on("getGuilds", (data) => {
+//   const manageable = []; //beats inte guilds
+
+//   data.guilds.forEach(async guild => {
+//     (client.guilds.cache.has(guild.id)) ? manageable.push({ ...guild, beats: true }) : manageable.push({ ...guild, beats: false })
+//   })
+//   socket.emit("guildsResponse", { user : data.user , guilds: manageable });
+// })
 
 
+socket.on("getGuilds", (data) => {
+  const manageable = []; // bot added
+
+  async function processGuilds() {
+    for (const guild of data.guilds) {
+      const result = await client.shard.broadcastEval((c, id) => c.guilds.cache.has(id), { context: guild.id });
+      const hasBot = result.some((each) => each === true);
+      manageable.push({ ...guild, bot: hasBot });
+    }
+  }
+  
+  processGuilds()
+    .then(() => {
+      const sanam = { user : data.user , guilds: manageable }
+      console.log(sanam)
+      socket.emit("guildsResponse", { user : data.user , guilds: manageable });
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+})
   // spotify confirmation
   // socket.on("spotify-confirmation", (data ) => {
   //    console.log(data)
   //   const embed = new EmbedBuilder()
   //     .setColor("#2f3136")
-  //     .setDescription(`Your spotify account has been authorized. The account linked to <:beats:1115516004886388736> Beats is : **[${data.spotifyDisplayName}](https://open.spotify.com/user/${data.spotifyUserId})**.\n\nUse the command </spotify play:1123951862236852304> to access your playlists and add them to the queue effortlessly.`)
+  //     .setDescription(`Your spotify account has been authorized. The account linked to <:beats:1115516004886388736> Beats is : **[data.spotifyUserId](data.spotifyUrl)**.\n\nUse the command </spotify play:1123951862236852304> to access your playlists and add them to the queue effortlessly.`)
   //     .setTitle('<:spotify:1123967292900900965> Spotify Account Authorized')
   //     .setThumbnail(data.spotifyAvatar);
   //   client.users.fetch(data.discordId).then((user) => {
