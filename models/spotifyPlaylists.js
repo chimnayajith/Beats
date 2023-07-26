@@ -5,6 +5,8 @@ const spotify = mongoose.Schema(
   {
     _id: { type: String, required: true },
     spotifyPlaylists: { type: String },
+    userSpotify : { type : Object},
+    spotifyPlaylistItems: { type: Array },
     access_token : { type: String},
     refresh_token : { type: String},
     expires : { type: Date },
