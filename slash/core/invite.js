@@ -22,7 +22,7 @@ module.exports = {
     const invite = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setURL("https://discord.com/api/oauth2/authorize?client_id=886801342239211522&permissions=2184529984&scope=bot%20applications.commands")
+          .setURL("https://discord.com/api/oauth2/authorize?client_id=886801342239211522&permissions=274914986304&scope=bot%20applications.commands")
           .setLabel("Invite Bot")
           .setEmoji(`<:add:901666352614473728>`)
           .setStyle(5)
