@@ -42,7 +42,7 @@ module.exports = {
       });
 
       const collector = msg.createMessageComponentCollector({
-        idle: 30000,
+        time: 30000,
         componentType: 2,
       });
 
@@ -75,6 +75,11 @@ module.exports = {
               collected
                 .editReply({ embeds: [cancelled], components: [] })
                 .then((message) => setTimeout(() => message.delete(), 5000));
+            }
+          });
+          collector.on("end", (collected, error) => {
+            if (error === "time") {
+              interaction.deleteReply();
             }
           });
   },
