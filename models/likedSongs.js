@@ -8,6 +8,8 @@ const liked = mongoose.Schema({
     image :{type:String , default:"https://cdn.beatsbot.in/attachments/favourites.png"},
     liked :{type:Array,required:true},
     trackCount :{type:Number,required:true},
+},{
+    timestamps : true
 });
 
 module.exports = beats_bot.model("likedSongs", liked);
