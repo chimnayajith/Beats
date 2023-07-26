@@ -4,7 +4,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("vote")
-    .setDescription("Vote for the bot on sites"),
+    .setDescription("Vote for Beats on sites"),
   category: "Infos",
   utilisation: "/vote",
 
@@ -22,14 +22,14 @@ module.exports = {
 
     const invite = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setURL("https://top.gg/bot/886801342239211522/vote")
-        .setLabel("top.gg")
-        .setEmoji("<:topgg:904199572715343882>")
-        .setStyle(5),
-      new ButtonBuilder()
         .setURL("https://discordbotlist.com/bots/beats-9741/upvote")
         .setLabel("dbl.com")
         .setEmoji("<:dbl:906810567694647336>")
+        .setStyle(5),      
+      new ButtonBuilder()
+        .setURL("https://top.gg/bot/886801342239211522/vote")
+        .setLabel("top.gg")
+        .setEmoji("<:topgg:904199572715343882>")
         .setStyle(5),
       new ButtonBuilder()
         .setURL("https://discords.com/bots/bot/886801342239211522/vote")
