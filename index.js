@@ -16,4 +16,4 @@ manager.on('shardCreate', shard => {
             manager.broadcastEval(client => client.emit('allShardsReady') , {shard : 0});
         }
     });
-});
+}); 

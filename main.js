@@ -1,20 +1,31 @@
 const { Player } = require("discord-player");
 const { Client, GatewayIntentBits, Partials  , Options , WebhookClient , EmbedBuilder} = require("discord.js");
-process.env.FFMPEG_PATH = require('ffmpeg-static')
 
 global.client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent, 
+    GatewayIntentBits.GuildMembers, 
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
   ],
-  partials: [Partials.Channel , Partials.GuildMember],
+  makeCache: Options.cacheWithLimits({
+    ...Options.DefaultMakeCacheSettings,
+    ThreadManager: 10,
+    GuildMemberManager: {
+        maxSize: 10,
+        keepOverLimit: (member) => member.id === client.user.id
+    }
+  }),
+sweepers: {
+    ...Options.DefaultSweeperSettings,
+    users: {
+        interval: 3600,
+        filter: () => (user) => user.id !== client.user.id
+    }
+},  
+  partials: [Partials.Channel],
   disableMentions: "everyone",
 });
-module.exports.bot = client;
 
 // client.rest.on('rateLimited', async (data) => {
 //   const embed = new EmbedBuilder().setColor('#2f3136').setTitle('Ratelimited')
@@ -33,7 +44,23 @@ module.exports.bot = client;
 
 client.config = require("./config");
 
-global.player = new Player(client);
+global.player = new Player(client , {
+  useLegacyFFmpeg: false,
+  ytdlOptions: {
+    quality: "highest",
+    filter: "audioonly",
+    highWaterMark: 1 << 25,
+    dlChunkSize: 0,
+    chunking : false,
+    requestOptions: {
+      headers: {
+        cookie:client.config.var.yt_cookie ,
+      },
+    },    
+  },
+});
+
+
 async function loadData() {
   try {
     await player.extractors.loadDefault();
@@ -44,18 +71,20 @@ async function loadData() {
 
 loadData();
 
-require("./src/loader");
-require("./src/slashloader");
-require("./src/guildslash");
-require("./src/voteReminder");
+require("./utils/register/registerEventListeners");
+require("./utils/register/registerSlashCommands");
+require("./utils/register/registerGuildCommands");
+require("./utils/other/voteReminder");
 
 
 require("./mongodb/beats-bot")
 require("./mongodb/beats-web")
 
 
+
+
 //Socket.io connection
-require("./src/socket-io")   
+require("./utils/other/socket-io")   
 
 //Error Handling
 // process.on("unhandledRejection", (reason, p) => {

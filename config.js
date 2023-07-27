@@ -7,3 +7,18 @@ module.exports = {
     maxVol: 200
   },
 };
+
+
+module.exports.botOptions = {
+  name: 'Beats',
+  logoUrl : 'https://cdn.beatsbot.in/Beats.png',
+  transparentLogoUrl : "https://cdn.beatsbot.in/Beatstr.png",
+  websiteUrl: 'https://beatsbot.in',
+  botInviteUrl: 'https://beatsbot.in/invite',
+  serverInviteUrl: 'https://beatsbot.in/support'
+};
+
+
+module.exports.embedOptions = {
+  
+}
