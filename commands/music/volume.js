@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
 const maxVol = client.config.opt.maxVol;
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -48,7 +49,14 @@ module.exports = {
         return interaction.reply({ embeds: [invalidVolume], ephemeral: true });
 
       const success = queue.node.setVolume(vol);
-
+      await logIfRequired(interaction.guild.id , "controlLogs" , {
+        guildName: interaction.guild.name,
+        guildID: interaction.guild.id,
+        guildIcon: interaction.guild.iconURL(),
+        command : "volume",
+        userID : interaction.user.id ,
+        textChannel : interaction.channel.id
+      });
       return interaction.reply(
         success ? { embeds: [volumeSuccess] } : { embeds: [errorEmbed], ephemeral: true }
       ).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));

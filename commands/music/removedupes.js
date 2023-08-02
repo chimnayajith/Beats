@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
   EmbedBuilder
 } = require("discord.js");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -45,6 +46,14 @@ module.exports = {
 
     const removeSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ | ⠀Removed **${dups}** duplicates from queue.`);
     if (dups !== 0) {
+      await logIfRequired(interaction.guild.id , "controlLogs" , {
+        guildName: interaction.guild.name,
+        guildID: interaction.guild.id,
+        guildIcon: interaction.guild.iconURL(),
+        command : "removedupes",
+        userID : interaction.user.id ,
+        textChannel : interaction.channel.id
+      });
       await interaction.editReply({ embeds: [removeSuccess] ,fetchReply : true});
     } else {
       await interaction.editReply({ embeds: [noDuplicates] });

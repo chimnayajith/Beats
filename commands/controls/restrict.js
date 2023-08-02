@@ -1,11 +1,18 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, PermissionFlagsBits } = require("discord.js");
+const {
+  EmbedBuilder,
+  ButtonBuilder,
+  ActionRowBuilder,
+  PermissionFlagsBits,
+} = require("discord.js");
 const ms = require("ms");
 const {
   checkRestricted,
   addRestriction,
   removeRestriction,
 } = require("../../utils/scripts/restrictUtil");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("restrict")
@@ -73,9 +80,7 @@ module.exports = {
 
       const notinguild = new EmbedBuilder()
         .setColor("#2f3136")
-        .setDescription(
-          "** <:failed:1131489226496671744> ⠀|⠀User not in this Server! **"
-        );
+        .setDescription("** cUser not in this Server! **");
       if (!restrictUser)
         return interaction.reply({ embeds: [notinguild], ephemeral: true });
 
@@ -179,6 +184,19 @@ module.exports = {
             duration,
             reason
           );
+          await logIfRequired(
+            interaction.guild.id,
+            "restrictLogs restrictUser",
+            {
+              guildName: interaction.guild.name,
+              guildID: interaction.guild.id,
+              guildIcon: interaction.guild.iconURL(),
+              restrictedUserId : user.id,
+              moderator : interaction.user.id,
+              duration : durationoption , 
+              reason : reason
+            }
+          );
           collected
             .editReply({ embeds: [success], components: [] })
             .then((message) =>
@@ -199,7 +217,7 @@ module.exports = {
       });
 
       collector.on("end", async (c, reason) => {
-        if (reason === "time") {
+        if (reason === "time" && c.size === 0) {
           confirmation.setTitle("Restriction Cancelled");
           interaction
             .editReply({ embeds: [confirmation], components: [disabledrow] })
@@ -227,6 +245,17 @@ module.exports = {
         });
 
       removeRestriction(interaction.guild.id, user.id);
+      await logIfRequired(
+        interaction.guild.id,
+        "restrictLogs unrestrictUser",
+        {
+          guildName: interaction.guild.name,
+          guildID: interaction.guild.id,
+          guildIcon: interaction.guild.iconURL(),
+          restrictedUserId : user.id,
+          moderator : interaction.user.id,
+        }
+      );
       const unRestricted = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(

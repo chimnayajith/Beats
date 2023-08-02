@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("pause")
@@ -36,6 +38,15 @@ module.exports = {
       } else {
         queue.node.pause();
         interaction.reply({ embeds: [pauseSuccess] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
+        await logIfRequired(interaction.guild.id , "controlLogs" , {
+          guildName: interaction.guild.name,
+          guildID: interaction.guild.id,
+          guildIcon: interaction.guild.iconURL(),
+          command : "pause",
+          userID : interaction.user.id ,
+          textChannel : interaction.channel.id
+        });
+
       }
     } catch {
       interaction.reply({ embeds: [errorEmbed], ephemeral: true });

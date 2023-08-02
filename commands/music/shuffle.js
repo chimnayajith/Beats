@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,6 +21,15 @@ module.exports = {
     if (!(queue.tracks.toArray().length >= 3)) return interaction.reply({ embeds: [noSongs], ephemeral: true });
 
     await queue.tracks.shuffle();
+
+    await logIfRequired(interaction.guild.id , "controlLogs" , {
+      guildName: interaction.guild.name,
+      guildID: interaction.guild.id,
+      guildIcon: interaction.guild.iconURL(),
+      command : "shuffle",
+      userID : interaction.user.id ,
+      textChannel : interaction.channel.id
+    });
 
     return interaction.reply({ embeds: [shuffleSuccess] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
   },

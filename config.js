@@ -1,3 +1,5 @@
+const { EmbedBuilder } = require("discord.js");
+
 module.exports = {
   var: {
     yt_cookie:
@@ -20,5 +22,10 @@ module.exports.botOptions = {
 
 
 module.exports.embedOptions = {
-  
+  emojis : {
+    failed : "<:failed:1131489226496671744>"
+  }
 }
+
+
+

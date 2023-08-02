@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { QueryType , Track} = require('discord-player');
 const { joinVoiceChannel } = require("@discordjs/voice");
 const db = require("../../models/serverPlaylists");
+const { logIdRequired, logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -52,7 +53,7 @@ module.exports = {
     ),
   voiceChannel: false,
   vote: true,
-  category: "",
+  category: "Music",
   utilisation: "",
   async autocomplete(interaction) {
     const data = await db.find({guildID : interaction.guild.id});
@@ -81,6 +82,13 @@ module.exports = {
           });
         newdata.save();
 
+        await logIfRequired(interaction.guild.id , "playlistUpdateLogs playlistSetup" , {
+          guildName: interaction.guild.name,
+          guildID: interaction.guild.id,
+          guildIcon: interaction.guild.iconURL(),
+          playlistName : interaction.options.get("name").value,
+          managerRole : interaction.options.get('role').value
+        } )
         // succesfully created
         const playlistCreated = new EmbedBuilder()
             .setColor("#2f3136")
@@ -144,6 +152,16 @@ module.exports = {
                 $push : { playlistTracks : { $each: [trackData], $position: 0 }},
                 $inc  : { tracks : +1 }
         });
+
+        await logIfRequired(interaction.guild.id , "playlistUpdateLogs playlistAdd" , {
+          guildName: interaction.guild.name,
+          guildID: interaction.guild.id,
+          guildIcon: interaction.guild.iconURL(),
+          userID : interaction.user.id,
+          playlistName : data.playlistName,
+          trackName : queue.currentTrack.title,
+          trackUrl : queue.currentTrack.url || queue.currentTrack.raw.url
+        } )
 
        const addedToPlaylist = new EmbedBuilder()
         .setColor("#2f3136")

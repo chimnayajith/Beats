@@ -3,7 +3,7 @@ const { EmbedBuilder, ButtonBuilder, ButtonStyle , ActionRowBuilder , ModalBuild
 const { getVoiceConnection } = require("@discordjs/voice");
 const db = require('../../models/reports')
 const util = require("../../utils/scripts/reportAdd")
-
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,7 +36,14 @@ module.exports = {
       connection.destroy();
     }
     const msg  = await interaction.reply({ embeds: [embed] ,components : [row] , fetchReply : true })
-    
+    await logIfRequired(interaction.guild.id , "controlLogs" , {
+      guildName: interaction.guild.name,
+      guildID: interaction.guild.id,
+      guildIcon: interaction.guild.iconURL(),
+      command : "disconnect",
+      userID : interaction.user.id ,
+      textChannel : interaction.channel.id
+    });
     const collector = msg.createMessageComponentCollector({
       componentType : 2
     })

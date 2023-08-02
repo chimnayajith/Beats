@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -26,7 +27,14 @@ module.exports = {
     }
 
     const success = queue.node.skip();  
-
+    await logIfRequired(interaction.guild.id , "controlLogs" , {
+      guildName: interaction.guild.name,
+      guildID: interaction.guild.id,
+      guildIcon: interaction.guild.iconURL(),
+      command : "skip",
+      userID : interaction.user.id ,
+      textChannel : interaction.channel.id
+    });
     return interaction.reply(
       success ? { embeds: [skipped] } : { embeds: [error], ephemeral: true }
     ).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -50,6 +51,15 @@ module.exports = {
       }
     }
 
+
+    await logIfRequired(interaction.guild.id , "controlLogs" , {
+      guildName: interaction.guild.name,
+      guildID: interaction.guild.id,
+      guildIcon: interaction.guild.iconURL(),
+      command : "loop",
+      userID : interaction.user.id ,
+      textChannel : interaction.channel.id
+    });
 
     if ( input === 'track') {
       queue.setRepeatMode(1);

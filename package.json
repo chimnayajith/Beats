@@ -1,8 +1,8 @@
 {
-  "name": "beats-v3",
+  "name": "beats",
   "main": "main.js",
   "author": "Chinmay Ajith",
-  "version": "3.6.0",
+  "version": "3.7.0-dev",
   "repository": "https://github.com/chimnayajith",
   "description": "The perfect music bot for your discord server",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@discord-player/downloader": "^3.0.1",
-    "@discord-player/extractor": "^4.2.0",
+    "@discord-player/extractor": "^4.4.1",
     "@discordjs/opus": "^0.9.0",
     "@discordjs/rest": "^1.7.1",
     "@discordjs/voice": "^0.16.0",
@@ -23,7 +23,7 @@
     "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
     "discord-api-types": "^0.26.1",
-    "discord-player": "^6.6.0-dev.0",
+    "discord-player": "^6.6.2",
     "discord-together": "^1.3.0",
     "discord-ytdl-core": "^5.0.4",
     "discord.js": "^14.11.0",
@@ -43,9 +43,6 @@
     "pretty-ms": "^7.0.1",
     "prism-media": "^1.3.4",
     "socket.io-client": "^4.7.0",
-    "winston": "^3.10.0",
-    "ytdl-core": "^4.11.5"
+    "winston": "^3.10.0"
   }
 }
-
-

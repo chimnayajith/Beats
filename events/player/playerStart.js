@@ -2,9 +2,18 @@ const { EmbedBuilder, ButtonBuilder, ActionRowBuilder , StringSelectMenuBuilder 
 const {addSongs}  = require("../../utils/scripts/likedUtil");
 const recents  = require("../../utils/scripts/recentUtil");
 const { SpotifyExtractor } = require("@discord-player/extractor");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = async (queue , track ) => {
-  
+  await logIfRequired(queue.options.guild.id , "playLogs" , {
+    guildName: queue.options.guild.name,
+    guildID: queue.options.guild.id,
+    guildIcon: queue.options.guild.iconURL(),
+    trackName : track.title,
+    trackUrl : track.url,
+    userID : track.requestedBy.id,
+    voiceChannel : queue.channel.id
+  })
   recents.addRecents(track.requestedBy.id , queue.options.guild.id , track)
   const  [minutes, seconds] = track.duration.split(":").map(Number); 
   const totalDuration  = (minutes*60*1000) + (seconds *1000)

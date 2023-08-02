@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
+const { logIfRequired } = require("../../utils/scripts/settingsUtil");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -31,6 +32,15 @@ module.exports = {
     const errorEmbed = new EmbedBuilder().setColor("#2f3136").setDescription("<a:warn:889018313143894046>⠀|⠀Something went wrong.Try again");
 
     if (!queue) return interaction.reply({ embeds: [noMusic] , ephemeral :true});
+
+    await logIfRequired(interaction.guild.id , "controlLogs" , {
+      guildName: interaction.guild.name,
+      guildID: interaction.guild.id,
+      guildIcon: interaction.guild.iconURL(),
+      command : "autoplay",
+      userID : interaction.user.id ,
+      textChannel : interaction.channel.id
+    });
 
     if (input === "on") {
         queue.setRepeatMode(3);
