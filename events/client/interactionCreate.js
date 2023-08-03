@@ -51,26 +51,38 @@ module.exports = async (client, interaction) => {
     const cmd = await client.slashCommands.get(interaction.commandName);
 
     const vote_restricted = new EmbedBuilder()
-      .setColor("#2f3136")
-      .setTitle("Vote Restricted")
-      .setDescription(
-        "This is a vote-restricted command. Please vote to use this command. You can also donate a small amount to bypass all vote-restricted commands for every month you donate."
-      )
-      .setThumbnail(
-        "https://images-ext-1.discordapp.net/external/9oXThT38s-OREhVmAkDeMoUcsNSMTrDZKEWwdAMLIeI/https/cdn.discordapp.com/emojis/777587011497623572.png"
-      );
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setStyle(ButtonStyle.Link)
-        .setLabel("Vote")
-        .setURL("https://beatsbot.in/vote/dbl")
-        .setEmoji("<a:vote:956901647043416104>"),
-      new ButtonBuilder()
-        .setStyle(ButtonStyle.Link)
-        .setLabel("Donate")
-        .setURL("https://beatsbot.in/patreon")
-        .setEmoji("<:patreon:956903191507763240>")
+    .setColor("#2f3136")
+    .setTitle("<:premium:1136316275677732964>⠀|⠀Premium Feature")
+    .setDescription(
+      "<:beats_right:1133048273704337558> Get Beats Premium now : **[Premium](https://www.patreon.com/thebeats)**\n\nPremium subscribers get access to exclusive commands and help support our development.\n\nOr vote for us every 12 hours: [Vote Now](https://beatsbot.in/vote/dbl) "
+    )
+    .setThumbnail(
+      "https://cdn.discordapp.com/attachments/939341316947603577/1136330613360697344/premium.png"
     );
+  const row = new ActionRowBuilder().addComponents(
+
+    new ButtonBuilder()
+      .setStyle(ButtonStyle.Link)
+      .setLabel("Premium")
+      .setURL("https://beatsbot.in/patreon")
+      .setEmoji("<:patreon:956903191507763240>")
+  );  
+
+    
+  const serverPremium = new EmbedBuilder()
+    .setColor("#2f3136")
+    .setTitle("<:premium:1136316275677732964>⠀|⠀Server Premium Exclusive Feature")
+    .setDescription(
+      "<:beats_right:1133048273704337558> Get Beats Server Premium now : **[Premium](https://www.patreon.com/thebeats)**\n\nPremium subscribers get access to exclusive commands and help support our development."
+    )
+    .setThumbnail(
+      "https://cdn.discordapp.com/attachments/939341316947603577/1136330613360697344/premium.png"
+    );
+    if(cmd && cmd.server_premium) {
+      const patron = await Patron.findOne({ _id: "patrons" });
+      const guild_plus = patron.server_plus;
+      if (!guild_plus.includes(interaction.guild.ownerId)) return interaction.reply({embeds : [serverPremium] , row : [row]}) 
+    }
 
     // Vote Check
     if (cmd && cmd.vote) {
@@ -99,7 +111,10 @@ module.exports = async (client, interaction) => {
       interaction.guild.id,
       interaction.commandName
     );
-    if (isDJ.isEnabled) {
+    const patron = await Patron.findOne({ _id: "patrons" });
+      const guild_plus = patron.server_plus;
+
+    if (isDJ.isEnabled && guild_plus.includes(interaction.guild.id)) {
       const djRestricted = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(

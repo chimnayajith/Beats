@@ -25,7 +25,8 @@ module.exports = {
     ),
 
   voiceChannel: false,
-  vote: false,
+  // vote: true,
+  server_premium : true , 
   category: "Info",
   utilisation: "/setdj [role]",
 
@@ -64,7 +65,7 @@ module.exports = {
       const success = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `${role} is now set as DJ role.\n\nBy default following commands are set to DJ : \`volume\`, \`skip\`, \`seek\`, \`disconnect\`, \`remove\`, \`removedupes\`, \`clear-queue\`, \`shuffle\`, \`pause\`, \`resume\`, \`previous\`, \`jump\`, \`autoplay\`, \`loop\`.\n\nTo customize the list of DJ commands, kindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.`
+          `${role} is now set as DJ role.\n\nBy default following commands are set to DJ : \`volume\`, \`skip\`, \`seek\`, \`disconnect\`, \`remove\`, \`removedupes\`, \`clear-queue\`, \`shuffle\`, \`pause\`, \`resume\`, \`previous\`, \`jump\`, \`autoplay\`, \`loop\`.\n\nTo customize the list of DJ commands, kindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.\n\n*Please note that DJ command restrictions only applies to servers with an active Server Premium Plan*`
         )
         .setTitle("DJ Setup Successfull");
 

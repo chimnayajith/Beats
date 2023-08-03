@@ -27,7 +27,8 @@ module.exports = {
             .setRequired(true)
         )
     ),
-
+  // vote : true , 
+  server_premium : true,
   category: "Info",
   utilisation: "/logs set [channel]",
 
@@ -51,7 +52,7 @@ module.exports = {
           .setDescription(
             `<:failed:1131489226496671744>⠀|⠀Beats doesn't have all/some of these permissions : \`Send Messages\`, \`View Channel\`, \`Embed Links\` in channel`
           );
-        return interaction.reply({ embeds: [noPermissions] });
+        return interaction.reply({ embeds: [noPermissions] , ephemeral : true});
       }
 
       const check = await checkExistingLogs(interaction.guild.id);
@@ -93,7 +94,7 @@ module.exports = {
 
       const successEmbed = new EmbedBuilder()
         .setColor("#2f3136")
-        .setDescription(`Beats activities will now be logged to ${channel}`)
+        .setDescription(`Beats activities will now be logged to ${channel}\n\n*Please note that Logging only applies to servers with an active Server Premium Plan*`)
         .setTitle(`Setup Successful`);
 
       const msg = await interaction.reply({

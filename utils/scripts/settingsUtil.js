@@ -1,4 +1,5 @@
 const db = require("../../models/guildSettings");
+const Patron = require("../../models/patrons");
 const { EmbedBuilder } = require("discord.js");
 exports.isDjCommand = async (guildID, commandName) => {
   const data = await db.findOne({ guildID: guildID });
@@ -283,40 +284,10 @@ exports.logEmbedTemplate = (action, data) => {
 
 exports.logIfRequired = async ( guildID , action , logData) => {
   const data = await db.findOne({guildID : guildID}, "logs -_id")
-  if ( data.logs.isEnabled && data.logs[action.split(" ").shift()] ){
+  const patron = await Patron.findOne({ _id: "patrons" });
+  const guild_plus = patron.server_plus;
+  if ( data.logs.isEnabled && data.logs[action.split(" ").shift()] && guild_plus.includes(guildID) ){
     const logChannel = await client.channels.fetch(data.logs.logChannelId);
     logChannel.send({embeds:[exports.logEmbedTemplate(action.split(" ").pop() , logData)]})
   }
 }
-
-
-// data - restrictLogs         - {restrictedUserId , duration , moderator , reason }
-// data - playLogs             - { userId , trackName , trackUrl , voiceChannel }
-
-// data - playlistUpdateLogs   - { userId , event : createPlaylist , playlistName , managerRole }
-// data - playlistUpdateLogs   - { userId , event : addTrackToPlaylist , playlistName , playlistTrack  }
-
-// data - djSettingsUpdateLogs - { userId , djRole , event : add? }
-// data - djSettingsUpdateLogs - { userId , djRole , event : remove? }
-
-// data - controlLogs          - { userId , event:command(volume, skip, seek, stop, disconnect, remove, clear-queue, shuffle, pause, resume, previous, jump, autoplay, loop) , Textchannel }
-
-// restrictLogs        done
-// playLogs             done
-// controlLogs            
-                    // volume, =======
-                    // skip, ==========
-                    // seek, =====
-                    // removedupes, =============
-                    // disconnect, 
-                    // remove, ==========
-                    // clear-queue,  ============
-                    // shuffle,  =========== 
-                    // pause,  ==========
-                    // resume,  ==============
-                    // previous, ================
-                    // jump, ==============
-                    // autoplay, 
-                    // loop
-// playlistUpdateLogs       done  
-// djSettingsUpdateLogs         done

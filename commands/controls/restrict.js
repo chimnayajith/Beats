@@ -61,7 +61,7 @@ module.exports = {
         )
     ),
   voiceChannel: false,
-  vote: false,
+  vote : true,
   category: "Info",
   utilisation:
     "/restrict add [user] [duration] <reason> or /restrict remove [user]",
