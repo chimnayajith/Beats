@@ -1,0 +1,41 @@
+{
+  "name": "beats",
+  "main": "src/index.js",
+  "author": "Chinmay Ajith",
+  "version": "3.7.0",
+  "repository": "https://github.com/chimnayajith",
+  "description": "The perfect music bot for your discord server",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@discord-player/downloader": "^3.0.2",
+    "@discord-player/extractor": "^4.5.0",
+    "@discord-player/opus": "^0.1.2",
+    "@discordjs/collection": "^2.1.0",
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/rest": "^2.3.0",
+    "@discordjs/voice": "^0.17.0",
+    "@sapphire/time-utilities": "^1.6.0",
+    "axios": "^1.4.0",
+    "canvas": "^2.11.2",
+    "chart.js": "^4.3.0",
+    "config": "^3.3.11",
+    "crypto-js": "^4.1.1",
+    "discord-api-types": "^0.26.1",
+    "discord-player": "^6.7.1",
+    "discord-player-youtubei": "^1.2.6",
+    "discord.js": "^14.15.2",
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security",
+    "js-abbreviation-number": "^1.4.0",
+    "math": "^0.0.3",
+    "mediaplex": "^0.0.9",
+    "mongodb": "^4.16.0",
+    "mongoose": "^7.2.1",
+    "ms": "^3.0.0-canary.1",
+    "pretty-ms": "^7.0.1",
+    "socket.io-client": "^4.7.0",
+    "winston": "^3.10.0"
+  }
+}
