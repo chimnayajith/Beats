@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
-require('dotenv').config(); // Load environment variables
+require('dotenv').config();
 
 const beats_bot = mongoose.createConnection(
-    process.env.DATABASE_BEATS_BOT_URI,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }
+    process.env.DATABASE_BEATS_BOT_URI
 );
 
 beats_bot.on('error', (error) => {
@@ -18,11 +14,7 @@ beats_bot.once('open', () => {
 });
 
 const beats_web = mongoose.createConnection(
-    process.env.DATABASE_BEATS_WEB_URI,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }
+    process.env.DATABASE_BEATS_WEB_URI
 );
 
 beats_web.on('error', (error) => {

@@ -13,19 +13,19 @@ module.exports = async ()=>{
     const clientId = process.env.DISCORD_APPLICATION_ID;
 
     fs.readdirSync("./src/interactions").forEach((dirs) => {
-    console.log(`\nLoading ${dirs} files`);
-    const commandFiles = fs
-        .readdirSync(`./src/interactions/${dirs}/`)
-        .filter((file) => file.endsWith(".js"));
+        console.log(`\nLoading ${dirs} files`);
+        const commandFiles = fs
+            .readdirSync(`./src/interactions/${dirs}/`)
+            .filter((file) => file.endsWith(".js"));
 
-    rest = new REST({ version: "9" }).setToken(process.env.DISCORD_BOT_TOKEN);
+        rest = new REST({ version: "9" }).setToken(process.env.DISCORD_BOT_TOKEN);
 
-    for (const file of commandFiles) {
-        console.log(`\t-> Loaded interaction ${file.split(".")[0]}`);
-        const command = require(`../../interactions/${dirs}/${file}`);
-        client.slashCommands.set(command.data.name.toLowerCase(), command);
-        commands.push(command.data.toJSON());
-    }
+        for (const file of commandFiles) {
+            console.log(`\t-> Loaded interaction ${file.split(".")[0]}`);
+            const command = require(`../../interactions/${dirs}/${file}`);
+            client.slashCommands.set(command.data.name.toLowerCase(), command);
+            commands.push(command.data.toJSON());
+        }
     });
 
     try {

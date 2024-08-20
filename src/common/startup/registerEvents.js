@@ -39,7 +39,7 @@ module.exports = async()=> {
 
     for (const file of clientRestEvents) {
         const event = require(`../../events/client_rest/${file}`);
-        console.log(`\t->Loaded clietn rest event ${file.split('.')[0]}`);
+        console.log(`\t->Loaded client rest event ${file.split('.')[0]}`);
         client.rest.on(file.split('.')[0], event.bind(null, client));
         delete require.cache[require.resolve(`../../events/client_rest/${file}`)];
     };

@@ -9,7 +9,7 @@ const {
 } = require("discord.js");
 const mongoose = require('mongoose');
 const playlists = require("../../models/playlist");
-const pretty = require("pretty-ms");
+const loadPrettyMs = async () => (await import('pretty-ms')).default;
 const { QueryType , Track} = require("discord-player");
 const axios = require('axios') 
 const { joinVoiceChannel } = require("@discordjs/voice");
@@ -99,7 +99,9 @@ module.exports = {
       arr.unshift(currentData);
 
       const length = queue.estimatedDuration;
+      const pretty = await loadPrettyMs();
       const duration = pretty(length);
+
 
       const dataQuery = await playlists.find({ userID: interaction.user.id });
       const allData = dataQuery.map((data) => {

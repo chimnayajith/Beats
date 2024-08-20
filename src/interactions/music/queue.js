@@ -6,7 +6,7 @@ const {
   StringSelectMenuBuilder,
   ActionRowBuilder,
 } = require("discord.js");
-const pretty = require("pretty-ms");
+const loadPrettyMs = async () => (await import('pretty-ms')).default;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,6 +25,7 @@ module.exports = {
     return interaction.reply({ embeds: [embed3], ephemeral: true });
 
     const length = queue.estimatedDuration;
+    const pretty = await loadPrettyMs();
     const duration = pretty(length);
 
     const methods = ["", "*Song looped*", "*Queue looped*"];

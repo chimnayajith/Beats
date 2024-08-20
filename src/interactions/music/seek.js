@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { EmbedBuilder } = require("discord.js");
 const ms = require("ms");
-const prettyms = require("pretty-ms");
+const loadPrettyMs = async () => (await import('pretty-ms')).default;
 const { logIfRequired } = require("../../common/utils/scripts/settingsUtil");
 
 module.exports = {
@@ -40,8 +40,8 @@ module.exports = {
 
     interaction.deferReply()
     await queue.node.seek(timeToMS);
-
-    const seekSuccess = new EmbedBuilder().setColor("#2f3136").setTitle(`<a:tick:889018326255288360> ⠀|⠀ Time set to **${prettyms(timeToMS, {colonNotation: true})}**`)
+    const prettyMs = await loadPrettyMs();
+    const seekSuccess = new EmbedBuilder().setColor("#2f3136").setTitle(`<a:tick:889018326255288360> ⠀|⠀ Time set to **${prettyMs(timeToMS, {colonNotation: true})}**`)
       .setDescription(
         `${queue.node.createProgressBar({
           indicator: "<:greendot:889018164694904872>",
