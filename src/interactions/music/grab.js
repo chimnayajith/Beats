@@ -12,8 +12,11 @@ module.exports = {
   async execute(client, interaction) {
     const queue = player.nodes.get(interaction.guild.id);
 
-    const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
-    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    const noMusic = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
+    if (!queue || !queue.isPlaying())
+      return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
     const track = queue.currentTrack;
 
@@ -37,20 +40,24 @@ module.exports = {
           name: ":hourglass: Duration",
           value: `\`${track.duration}\``,
           inline: true,
-        }
+        },
       )
       .setThumbnail(track.thumbnail)
       .setFooter({ text: `Saved from ${interaction.guild.name}` });
 
-    const songGrabbed = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mailbox_with_mail:⠀ | ⠀Song saved to DM**`);
-    const dmClosed = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x:⠀ | ⠀Unable to DM ${interaction.user}**`);
+    const songGrabbed = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:mailbox_with_mail:⠀ | ⠀Song saved to DM**`);
+    const dmClosed = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:x:⠀ | ⠀Unable to DM ${interaction.user}**`);
 
     interaction.user
       .send({ embeds: [songInfo] })
       .then(() => {
-        interaction.reply({ embeds: [songGrabbed] , ephemeral:true});
+        interaction.reply({ embeds: [songGrabbed], ephemeral: true });
       })
-      .catch((error) => {
+      .catch(() => {
         interaction.reply({ embeds: [dmClosed], ephemeral: true });
       });
   },

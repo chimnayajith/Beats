@@ -1,12 +1,6 @@
-
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const {
-  EmbedBuilder,
-  ButtonBuilder,
-  StringSelectMenuBuilder,
-  ActionRowBuilder,
-} = require("discord.js");
-const loadPrettyMs = async () => (await import('pretty-ms')).default;
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
+const loadPrettyMs = async () => (await import("pretty-ms")).default;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,10 +13,9 @@ module.exports = {
   async execute(client, interaction) {
     const queue = player.nodes.get(interaction.guild.id);
     const embed3 = new EmbedBuilder()
-    .setColor("#2f3136")
-    .setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
-  if (!queue)
-    return interaction.reply({ embeds: [embed3], ephemeral: true });
+      .setColor("#2f3136")
+      .setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
+    if (!queue) return interaction.reply({ embeds: [embed3], ephemeral: true });
 
     const length = queue.estimatedDuration;
     const pretty = await loadPrettyMs();
@@ -30,17 +23,19 @@ module.exports = {
 
     const methods = ["", "*Song looped*", "*Queue looped*"];
 
-   
-
     const autoplay = new EmbedBuilder()
       .setColor("#2f3136")
-      .setDescription(`**<a:warn:889018313143894046>⠀ | ⠀Autoplay Mode enabled**`);
+      .setDescription(
+        `**<a:warn:889018313143894046>⠀ | ⠀Autoplay Mode enabled**`,
+      );
     if (queue.repeatMode == 3)
       return interaction.reply({ embeds: [autoplay], ephemeral: true });
 
     const embed4 = new EmbedBuilder()
       .setColor("#2f3136")
-      .setDescription(`**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`);
+      .setDescription(
+        `**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`,
+      );
     if (!queue.tracks.toArray()[0])
       return interaction.reply({ embeds: [embed4], ephemeral: true });
 
@@ -50,12 +45,13 @@ module.exports = {
     const total = Math.ceil(queue.tracks.size / 10);
 
     for (let i = 0; i < queue.tracks.size; i += 10) {
-      let queuepage = queue.tracks.toArray()
+      let queuepage = queue.tracks
+        .toArray()
         .map(
           (track, i) =>
             `${i + 1}) [${track.title}](${track.url}) \`[${
               track.duration
-            }]\` - [${track.requestedBy}]`
+            }]\` - [${track.requestedBy}]`,
         )
         .slice(i, i + 10)
         .join("\n\n");
@@ -64,18 +60,19 @@ module.exports = {
         .setTitle(
           `Server Queue⠀|⠀${interaction.guild.name}\n${
             methods[queue.repeatMode]
-          }\nQueue Duration : ${duration}`
+          }\nQueue Duration : ${duration}`,
         )
         .setThumbnail(
           interaction.guild.iconURL({
             dynamic: false,
             size: 2048,
             format: "png",
-          })
+          }),
         )
         .setDescription(
-          `**Currently Playing :** \`\`\`yaml\n${queue.currentTrack
-            .title}\`\`\`\n **Upcoming tracks(${queue.tracks.size})\n**\n${queuepage}`
+          `**Currently Playing :** \`\`\`yaml\n${
+            queue.currentTrack.title
+          }\`\`\`\n **Upcoming tracks(${queue.tracks.size})\n**\n${queuepage}`,
         )
         .setFooter({ text: `Page : ${Math.ceil(i / 10) + 1}/${total}` });
       pages.push(page);

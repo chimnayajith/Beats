@@ -17,7 +17,8 @@ module.exports = {
       .setColor("#2f3136")
       .setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
 
-    if (!queue) return interaction.reply({ embeds: [noTracks], ephemeral: true });
+    if (!queue)
+      return interaction.reply({ embeds: [noTracks], ephemeral: true });
 
     const alreadyPaused = new EmbedBuilder()
       .setColor("#2f3136")
@@ -26,7 +27,7 @@ module.exports = {
     const pauseSuccess = new EmbedBuilder()
       .setColor("#2f3136")
       .setDescription(
-        `<:pause:1105337419710091316>⠀|⠀${queue.currentTrack.title} \`paused\`.`
+        `<:pause:1105337419710091316>⠀|⠀${queue.currentTrack.title} \`paused\`.`,
       );
     const errorEmbed = new EmbedBuilder()
       .setColor("#2f3136")
@@ -37,16 +38,24 @@ module.exports = {
         interaction.reply({ embeds: [alreadyPaused], ephemeral: true });
       } else {
         queue.node.pause();
-        interaction.reply({ embeds: [pauseSuccess] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
-        await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "controlLogs" , {
-          guildName: interaction.guild.name,
-          guildID: interaction.guild.id,
-          guildIcon: interaction.guild.iconURL(),
-          command : "pause",
-          userID : interaction.user.id ,
-          textChannel : interaction.channel.id
-        });
-
+        interaction
+          .reply({ embeds: [pauseSuccess] })
+          .then((message) =>
+            setTimeout(() => message.delete().catch(console.error), 20000),
+          );
+        await logIfRequired(
+          interaction.guild.id,
+          interaction.guild.ownerId,
+          "controlLogs",
+          {
+            guildName: interaction.guild.name,
+            guildID: interaction.guild.id,
+            guildIcon: interaction.guild.iconURL(),
+            command: "pause",
+            userID: interaction.user.id,
+            textChannel: interaction.channel.id,
+          },
+        );
       }
     } catch {
       interaction.reply({ embeds: [errorEmbed], ephemeral: true });

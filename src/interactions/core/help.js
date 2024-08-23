@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const {
   EmbedBuilder,
-  ButtonBuilder,
   StringSelectMenuBuilder,
   ActionRowBuilder,
 } = require("discord.js");
@@ -14,23 +13,26 @@ module.exports = {
       option
         .setName("command")
         .setDescription(
-          "Specify command to see detailed explanation of each command"
+          "Specify command to see detailed explanation of each command",
         )
         .setRequired(false)
-        .setAutocomplete(true)
+        .setAutocomplete(true),
     ),
   category: "Infos",
   utilisation: "/help <command name>",
 
   async autocomplete(interaction) {
     const focusedValue = interaction.options.getFocused();
-    const choices = client.slashCommands.filter((x) => x.category != "Staff").map((x) =>  x.data.name)
-    const filtered = choices.filter(choice => choice.startsWith(focusedValue)).slice(0,25);
+    const choices = client.slashCommands
+      .filter((x) => x.category != "Staff")
+      .map((x) => x.data.name);
+    const filtered = choices
+      .filter((choice) => choice.startsWith(focusedValue))
+      .slice(0, 25);
     await interaction.respond(
-      filtered.map(choice => ({ name: choice, value: choice })),
+      filtered.map((choice) => ({ name: choice, value: choice })),
     );
   },
-
 
   async execute(client, interaction) {
     if (!interaction.options.get("command")) {
@@ -40,7 +42,7 @@ module.exports = {
           .setPlaceholder("Choose Category")
           .addOptions([
             {
-              label: "Utility", 
+              label: "Utility",
               description: "Utility commands",
               value: "Utility",
               emoji: "<a:utility:889018312514752532>",
@@ -57,18 +59,16 @@ module.exports = {
               value: "Filters",
               emoji: "<:filter:900717998308991036>",
             },
-          ])
+          ]),
       );
 
       let embed = new EmbedBuilder()
         .setTitle("<:help1:900708695829250120> • HELP MENU")
         .setDescription(
-          "Unleash the rhythm and elevate your Discord server with **Beats**, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community. \n\n**[Website](https://beatsbot.in)**  |  **[Commands](https://dashboard.beatsbot.in/commands)**  |  **[Invite](https://discord.com/api/oauth2/authorize?client_id=886801342239211522&permissions=2184529984&scope=bot%20applications.commands)**  |  **[Support](https://discord.gg/JRRZmdFGmq)**\n\nChoose Command Category.⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "Unleash the rhythm and elevate your Discord server with **Beats**, the ultimate music bot that brings harmony, energy, and a symphony of melodies to your online community. \n\n**[Website](https://beatsbot.in)**  |  **[Commands](https://dashboard.beatsbot.in/commands)**  |  **[Invite](https://discord.com/api/oauth2/authorize?client_id=886801342239211522&permissions=2184529984&scope=bot%20applications.commands)**  |  **[Support](https://discord.gg/JRRZmdFGmq)**\n\nChoose Command Category.⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
         )
         .setColor("#2f3136")
-        .setThumbnail(
-          "https://cdn.beatsbot.in/Beatstr.png"
-        );
+        .setThumbnail("https://cdn.beatsbot.in/Beatstr.png");
 
       const msg = await interaction.reply({
         embeds: [embed],
@@ -76,7 +76,7 @@ module.exports = {
         fetchReply: true,
       });
 
-      filters = [
+      const filters = [
         "Bassboost",
         "8D",
         "Vaporwave",
@@ -113,13 +113,11 @@ module.exports = {
       const embed1 = new EmbedBuilder()
         .setTitle("<:help1:900708695829250120> • HELP MENU")
         .setColor("#2f3136")
-        .setThumbnail(
-          "https://cdn.beatsbot.in/Beatstr.png"
-        )
+        .setThumbnail("https://cdn.beatsbot.in/Beatstr.png")
         .setDescription(
           `\`\`\`yaml
 Use /help <command> to know more⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-For eg: /help invite\`\`\``
+For eg: /help invite\`\`\``,
         )
         .addFields({
           name: "<a:utility:889018312514752532> • UTILITY COMMANDS",
@@ -129,13 +127,11 @@ For eg: /help invite\`\`\``
       const embed2 = new EmbedBuilder()
         .setTitle("<:help1:900708695829250120> • HELP MENU")
         .setColor("#2f3136")
-        .setThumbnail(
-          "https://cdn.beatsbot.in/Beatstr.png"
-        )
+        .setThumbnail("https://cdn.beatsbot.in/Beatstr.png")
         .setDescription(
           `\`\`\`yaml
 Use /help <command> to know more
-For eg: /help play\`\`\`\n\n`
+For eg: /help play\`\`\`\n\n`,
         )
         .addFields({
           name: "<a:music:900715679722913852> • MUSIC COMMANDS",
@@ -145,13 +141,11 @@ For eg: /help play\`\`\`\n\n`
       const filterlist = new EmbedBuilder()
         .setColor("#2f3136")
         .setTitle("<:help1:900708695829250120> • HELP MENU")
-        .setThumbnail(
-          "https://cdn.beatsbot.in/Beatstr.png"
-        )
+        .setThumbnail("https://cdn.beatsbot.in/Beatstr.png")
         .setDescription(
           `\`\`\`yaml
 Use /filter [filter name] to add a filter.
-For eg: /filter 8D\`\`\`\n\n`
+For eg: /filter 8D\`\`\`\n\n`,
         )
         .addFields({
           name: "<:filter:900717998308991036> • AUDIO FILTERS\n",
@@ -169,7 +163,13 @@ For eg: /filter 8D\`\`\`\n\n`
         await collected.deferUpdate();
         if (collected.user.id !== interaction.user.id)
           return collected.followUp({
-            embeds : [new EmbedBuilder().setColor("#2f3136").setDescription(`<:huh:897560243624640563>  |  That command wasn't for you`)],
+            embeds: [
+              new EmbedBuilder()
+                .setColor("#2f3136")
+                .setDescription(
+                  `<:huh:897560243624640563>  |  That command wasn't for you`,
+                ),
+            ],
             ephemeral: true,
           });
         if (value === "Utility") {
@@ -197,10 +197,10 @@ For eg: /filter 8D\`\`\`\n\n`
               value: "Utility",
               emoji: "<a:utility:889018312514752532>",
             },
-          ])
+          ]),
       );
-      collector.on("end", (async) => {
-        interaction.editReply({ components: [disabledrow]});
+      collector.on("end", () => {
+        interaction.editReply({ components: [disabledrow] });
       });
     } else {
       const query = interaction.options.get("command").value;
@@ -208,7 +208,7 @@ For eg: /filter 8D\`\`\`\n\n`
       const nohelp = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `<a:warn:889018313143894046>⠀ | ⠀ This is not a command`
+          `<a:warn:889018313143894046>⠀ | ⠀ This is not a command`,
         );
       if (!cmd) return interaction.reply({ embeds: [nohelp], ephemeral: true });
 
@@ -219,16 +219,14 @@ For eg: /filter 8D\`\`\`\n\n`
           iconURL: interaction.user.avatarURL(),
         })
         .setDescription(`\`\`\`yaml\n${cmd.data.description}\`\`\``)
-        .setThumbnail(
-          "https://cdn.beatsbot.in/Beatstr.png"
-        )
+        .setThumbnail("https://cdn.beatsbot.in/Beatstr.png")
         .setFields(
           { name: "Category", value: `\`${cmd.category}\``, inline: true },
           { name: "Usage", value: `\`${cmd.utilisation}\``, inline: true },
           {
             name: "\u200B",
             value: `**Having issues?**\n Join [support server](https://beatsbot.in/support)`,
-          }
+          },
         );
       interaction.reply({ embeds: [helpeach] });
     }

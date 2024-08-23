@@ -1,28 +1,50 @@
-
-const { EmbedBuilder, WebhookClient} = require("discord.js");
-const logger = require('../../common/utils/other/logger');
+const {
+  EmbedBuilder,
+  WebhookClient,
+  PermissionFlagsBits,
+} = require("discord.js");
+const logger = require("../../common/utils/other/logger");
 const { getVoiceConnection } = require("@discordjs/voice");
 
 //Player errorr
 module.exports = async (queue, error) => {
-    if(error.message.includes('read ENOTCONN')) {
-        logger.warn(`read ENOTCONN detected in ${queue.guild.id}.. Trying to delete queue!`)
-        const connection = getVoiceConnection(queue.guild.id)
-       const enotconn = new EmbedBuilder().setColor("#2f3136").setDescription("Due to an error in the queue, it has been deleted.This is to prevent the bot from crashing. Join the [Support Server](https://discord.gg/JRRZmdFGmq) for more info.")
-       if(queue.metadata.interaction.guild.members.me.permissionsIn(queue.metadata.interaction.channel).has([PermissionFlagsBits.SendMessages , PermissionFlagsBits.ViewChannel , PermissionFlagsBits.EmbedLinks])) {
-           await queue.metadata.interaction.channel.send({embeds : [enotconn]});
-       }
-       process.nextTick(() => {
-        queue.setRepeatMode(0)
-        connection.destroy();
-        queue.delete();
-      });
-     }
-    console.log(`Error at ${queue.guild.id} | ${error.message}`);
-    logger.warn(`Error : ${error.message}, Guild ID: ${queue.guild.id}`)
-   const embed = new EmbedBuilder().setColor("#2f3136").setDescription(`\`\`\`${error.stack.slice(0,4000)}\`\`\``).setTitle(`Error at ${queue.guild.name} | ${error.message.substring(0,200)}`)
-    const webhookClient = new WebhookClient({url : "https://discord.com/api/webhooks/1121858697812000838/63nYVPjOrhBM3xGh50peX_PRSKg18iuSX1982CBLIHYCXNBceM01tPfr1aluom4EyZOm"});
-    webhookClient.send({embeds : [embed]});
-
+  if (error.message.includes("read ENOTCONN")) {
+    logger.warn(
+      `read ENOTCONN detected in ${queue.guild.id}.. Trying to delete queue!`,
+    );
+    const connection = getVoiceConnection(queue.guild.id);
+    const enotconn = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(
+        "Due to an error in the queue, it has been deleted.This is to prevent the bot from crashing. Join the [Support Server](https://discord.gg/JRRZmdFGmq) for more info.",
+      );
+    if (
+      queue.metadata.interaction.guild.members.me
+        .permissionsIn(queue.metadata.interaction.channel)
+        .has([
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.EmbedLinks,
+        ])
+    ) {
+      await queue.metadata.interaction.channel.send({ embeds: [enotconn] });
+    }
+    process.nextTick(() => {
+      queue.setRepeatMode(0);
+      connection.destroy();
+      queue.delete();
+    });
+  }
+  console.log(`Error at ${queue.guild.id} | ${error.message}`);
+  logger.warn(`Error : ${error.message}, Guild ID: ${queue.guild.id}`);
+  const embed = new EmbedBuilder()
+    .setColor("#2f3136")
+    .setDescription(`\`\`\`${error.stack.slice(0, 4000)}\`\`\``)
+    .setTitle(
+      `Error at ${queue.guild.name} | ${error.message.substring(0, 200)}`,
+    );
+  const webhookClient = new WebhookClient({
+    url: "https://discord.com/api/webhooks/1121858697812000838/63nYVPjOrhBM3xGh50peX_PRSKg18iuSX1982CBLIHYCXNBceM01tPfr1aluom4EyZOm",
+  });
+  webhookClient.send({ embeds: [embed] });
 };
-

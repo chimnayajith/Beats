@@ -6,16 +6,16 @@ exports.checkRestricted = async (guildID, userID) => {
 };
 
 exports.getRestricted = async (guildID, userID) => {
-    const data = await db.findOne({ guildID: guildID, userID: userID });
-    return data;
-  };
+  const data = await db.findOne({ guildID: guildID, userID: userID });
+  return data;
+};
 
 exports.addRestriction = async (
   guildID,
   userID,
   moderator,
   duration,
-  reason
+  reason,
 ) => {
   const newData = new db({
     guildID: guildID,
@@ -27,6 +27,6 @@ exports.addRestriction = async (
   newData.save();
 };
 
-exports.removeRestriction = async (guildID , userID) => {
-  await db.findOneAndDelete({guildID : guildID , userID : userID});
-}
+exports.removeRestriction = async (guildID, userID) => {
+  await db.findOneAndDelete({ guildID: guildID, userID: userID });
+};

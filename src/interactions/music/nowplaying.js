@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { EmbedBuilder , ActionRowBuilder , ButtonBuilder} = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { abbreviateNumber } = require("js-abbreviation-number");
 
 module.exports = {
@@ -12,12 +12,15 @@ module.exports = {
 
   async execute(client, interaction) {
     const queue = player.nodes.get(interaction.guild.id);
-    
-    const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
-    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+
+    const noMusic = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
+    if (!queue || !queue.isPlaying())
+      return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
     const track = queue.currentTrack;
-    const methods = ["Disabled", "Track", "Queue" , "AutoPlay"];
+    const methods = ["Disabled", "Track", "Queue", "AutoPlay"];
 
     const embed2 = new EmbedBuilder()
       .setColor("#2f3136")
@@ -29,7 +32,6 @@ module.exports = {
           name: "Views",
           // value: `\`${abbreviateNumber((track.views === 0) ? track.metadata.bridge.views || 0 : track.views , 2, {
           value: `\`${abbreviateNumber(track.views, {
-
             symbols: ["", " K", " M", " B"],
           })}\``,
           inline: true,
@@ -45,48 +47,18 @@ module.exports = {
           value: `\`${methods[queue.repeatMode]}\``,
           inline: true,
         },
-        { name: "Volume", value: `\`${queue.node.volume}%\``, inline: true }
+        { name: "Volume", value: `\`${queue.node.volume}%\``, inline: true },
       )
       .setThumbnail(track.thumbnail)
       .setDescription(
         `⠀\n${queue.node.createProgressBar({
           indicator: "<:greendot:889018164694904872>",
-          leftChar : "<:played:1125310974585475122>",
-          rightChar : "<:unplayed:1125310972119220295>",
+          leftChar: "<:played:1125310974585475122>",
+          rightChar: "<:unplayed:1125310972119220295>",
           timecodes: true,
-        })}⠀\n⠀\n`
+        })}⠀\n⠀\n`,
       );
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId("shuffle")
-        .setLabel(" ")
-        .setStyle(2) 
-        .setEmoji("🔀"),
 
-      new ButtonBuilder()
-        .setCustomId("back")
-        .setLabel(" ")
-        .setStyle(2)
-        .setEmoji("⏮"),
-      new ButtonBuilder()
-        .setCustomId("pause")
-        .setLabel(" ")
-        .setStyle(2)
-        .setEmoji("⏸"),
-
-      new ButtonBuilder()
-        .setCustomId("next")
-        .setLabel(" ")
-        .setStyle(2)
-        .setEmoji("⏭"),
-
-      new ButtonBuilder()
-        .setCustomId("stop")
-        .setLabel(" ")
-        .setStyle(4)
-        .setEmoji("⏹")
-    );
-
-    interaction.reply({ embeds: [embed2]});
+    interaction.reply({ embeds: [embed2] });
   },
 };

@@ -16,6 +16,6 @@ module.exports = {
         value: `\nThis message has a latency  **\`${client.ws.ping} ms\`**`,
       });
     embed.setTimestamp();
-    return interaction.reply({ embeds: [embed]});
+    return interaction.reply({ embeds: [embed] });
   },
 };

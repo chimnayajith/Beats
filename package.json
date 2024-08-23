@@ -1,12 +1,31 @@
 {
   "name": "beats",
+  "version": "3.8.0",
+  "description": "The perfect music bot for your discord server.",
   "main": "src/index.js",
   "author": "Chinmay Ajith",
-  "version": "3.7.0",
-  "repository": "https://github.com/chimnayajith/Beats",
-  "description": "The perfect music bot for your discord server",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chimnayajith/Beats"
+  },
+  "bugs": {
+    "url": "https://github.com/chimnayajith/Beats/issues"
+  },
+  "homepage": "https://github.com/chimnayajith/Beats#readme",
+  "keywords": [
+    "discord",
+    "music-bot",
+    "discord-bot",
+    "discord.js",
+    "beats"
+  ],
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "build": "webpack"
   },
   "dependencies": {
     "@discord-player/downloader": "^3.0.2",
@@ -36,5 +55,12 @@
     "pretty-ms": "^9.1.0",
     "socket.io-client": "^4.7.5",
     "winston": "^3.14.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "webpack": "^5.88.1"
   }
 }

@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const {
-  EmbedBuilder
-} = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { logIfRequired } = require("../../common/utils/scripts/settingsUtil");
 
 module.exports = {
@@ -16,19 +14,36 @@ module.exports = {
   async execute(client, interaction) {
     const queue = player.nodes.get(interaction.guild.id);
 
-    const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
-    if (!queue) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    const noMusic = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:mute:⠀ | ⠀No music currently playing**`);
+    if (!queue)
+      return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
-    const oneSong = new EmbedBuilder().setColor("#2f3136").setDescription(`**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`);
+    const oneSong = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(
+        `**<a:warn:889018313143894046> ⠀|⠀ Only one song in the queue**`,
+      );
     if (!queue.tracks.toArray()[0])
       return interaction.reply({ embeds: [oneSong], ephemeral: true });
 
     await interaction.deferReply();
 
-    const waitEmbed = new EmbedBuilder().setColor("#2f3136").setDescription("<a:loading1:898038915536134144>⠀ | ⠀Removing duplicates. Please wait...");
-    await interaction.editReply({embeds: [waitEmbed],ephemeral: true,fetchReply: true});
+    const waitEmbed = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(
+        "<a:loading1:898038915536134144>⠀ | ⠀Removing duplicates. Please wait...",
+      );
+    await interaction.editReply({
+      embeds: [waitEmbed],
+      ephemeral: true,
+      fetchReply: true,
+    });
 
-    const noDuplicates = new EmbedBuilder().setColor("#2f3136").setDescription(":x:⠀ | ⠀No duplicate songs to remove");
+    const noDuplicates = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(":x:⠀ | ⠀No duplicate songs to remove");
 
     const songs = [];
     let dups = 0;
@@ -37,24 +52,36 @@ module.exports = {
     for (let i = 0; i <= tracks.length - 1; i++) {
       const track = tracks[i];
       if (songs.includes(track.url)) {
-        queue.tracks.removeOne((t) => t.id === track.id , true)
+        queue.tracks.removeOne((t) => t.id === track.id, true);
         dups++;
       } else {
         songs.push(track.url, track);
       }
     }
 
-    const removeSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ | ⠀Removed **${dups}** duplicates from queue.`);
+    const removeSuccess = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(
+        `<a:tick:889018326255288360>⠀ | ⠀Removed **${dups}** duplicates from queue.`,
+      );
     if (dups !== 0) {
-      await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "controlLogs" , {
-        guildName: interaction.guild.name,
-        guildID: interaction.guild.id,
-        guildIcon: interaction.guild.iconURL(),
-        command : "removedupes",
-        userID : interaction.user.id ,
-        textChannel : interaction.channel.id
+      await logIfRequired(
+        interaction.guild.id,
+        interaction.guild.ownerId,
+        "controlLogs",
+        {
+          guildName: interaction.guild.name,
+          guildID: interaction.guild.id,
+          guildIcon: interaction.guild.iconURL(),
+          command: "removedupes",
+          userID: interaction.user.id,
+          textChannel: interaction.channel.id,
+        },
+      );
+      await interaction.editReply({
+        embeds: [removeSuccess],
+        fetchReply: true,
       });
-      await interaction.editReply({ embeds: [removeSuccess] ,fetchReply : true});
     } else {
       await interaction.editReply({ embeds: [noDuplicates] });
     }

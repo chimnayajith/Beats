@@ -9,13 +9,13 @@ module.exports = {
       option
         .setName("user-id")
         .setDescription("User id of the user to dm")
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName("message")
         .setDescription("Message to send")
-        .setRequired(true)
+        .setRequired(true),
     ),
   category: "Staff",
   utilisation: "/dm <user id> <message>",
@@ -23,11 +23,17 @@ module.exports = {
   async execute(client, interaction) {
     const user = await interaction.options.getUser("user-id");
     const message = interaction.options.getString("message");
-    const dmsent = new EmbedBuilder().setColor("#00FF00").setDescription(`:mailbox_with_mail:⠀ | ⠀DM sent to ${user.username}!!`);
-    const nouser = new EmbedBuilder().setColor("#FF0000").setDescription(`:x:⠀ | ⠀There is no such user`);
-    const closeddm = new EmbedBuilder().setColor("#FF0000").setDescription("**:x:⠀ | ⠀This user has closed dm's**");
+    const dmsent = new EmbedBuilder()
+      .setColor("#00FF00")
+      .setDescription(`:mailbox_with_mail:⠀ | ⠀DM sent to ${user.username}!!`);
+    const nouser = new EmbedBuilder()
+      .setColor("#FF0000")
+      .setDescription(`:x:⠀ | ⠀There is no such user`);
+    const closeddm = new EmbedBuilder()
+      .setColor("#FF0000")
+      .setDescription("**:x:⠀ | ⠀This user has closed dm's**");
     const send = new EmbedBuilder()
-    
+
       .setColor("#00FF00")
       .setAuthor({
         name: `${interaction.user.tag}`,
@@ -43,9 +49,9 @@ module.exports = {
     try {
       user
         .send({ embeds: [send] })
-        .then((_) => interaction.reply({ embeds: [dmsent] }))
+        .then(() => interaction.reply({ embeds: [dmsent] }))
         .catch(() =>
-          interaction.reply({ embeds: [closeddm], ephemeral: true })
+          interaction.reply({ embeds: [closeddm], ephemeral: true }),
         );
     } catch {
       interaction.reply({ embeds: [nouser], ephemeral: true });

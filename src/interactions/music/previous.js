@@ -13,25 +13,44 @@ module.exports = {
   async execute(client, interaction) {
     const queue = player.nodes.get(interaction.guild.id);
 
-    const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
-    if (!queue || !queue.isPlaying()) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    const noMusic = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
+    if (!queue || !queue.isPlaying())
+      return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
-    const noPrevious = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀| ⠀No tracks were played before.**`);
-    if (!queue.history.tracks.at(0)) return interaction.reply({ embeds: [noPrevious], ephemeral: true });
+    const noPrevious = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:x: ⠀| ⠀No tracks were played before.**`);
+    if (!queue.history.tracks.at(0))
+      return interaction.reply({ embeds: [noPrevious], ephemeral: true });
 
-    interaction.deferReply()
+    interaction.deferReply();
     await queue.history.previous(true);
 
-    await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "controlLogs" , {
-      guildName: interaction.guild.name,
-      guildID: interaction.guild.id,
-      guildIcon: interaction.guild.iconURL(),
-      command : "previous",
-      userID : interaction.user.id ,
-      textChannel : interaction.channel.id
-    });
+    await logIfRequired(
+      interaction.guild.id,
+      interaction.guild.ownerId,
+      "controlLogs",
+      {
+        guildName: interaction.guild.name,
+        guildID: interaction.guild.id,
+        guildIcon: interaction.guild.iconURL(),
+        command: "previous",
+        userID: interaction.user.id,
+        textChannel: interaction.channel.id,
+      },
+    );
 
-    const prevSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360>⠀ |⠀ Playing **previous** track.`);
-    interaction.editReply({ embeds: [prevSuccess] }).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
+    const prevSuccess = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(
+        `<a:tick:889018326255288360>⠀ |⠀ Playing **previous** track.`,
+      );
+    interaction
+      .editReply({ embeds: [prevSuccess] })
+      .then((message) =>
+        setTimeout(() => message.delete().catch(console.error), 20000),
+      );
   },
 };

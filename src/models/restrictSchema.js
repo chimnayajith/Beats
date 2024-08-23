@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {beats_bot} = require("../common/startup/connectDB");
+const { beats_bot } = require("../common/startup/connectDB");
 
 const restrictSchema = new mongoose.Schema({
   guildID: { type: String, required: true },

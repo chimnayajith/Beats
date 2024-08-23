@@ -10,7 +10,7 @@ const {
   checkExistingDJ,
   djAddRole,
   djRemoveRole,
-  logIfRequired
+  logIfRequired,
 } = require("../../common/utils/scripts/settingsUtil");
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,12 +21,12 @@ module.exports = {
       option
         .setName("role")
         .setDescription("Role that can use DJ commands in the server")
-        .setRequired(true)
+        .setRequired(true),
     ),
 
   voiceChannel: false,
   // vote: true,
-  server_premium : true , 
+  server_premium: true,
   category: "Info",
   utilisation: "/setdj [role]",
 
@@ -39,7 +39,7 @@ module.exports = {
       const djSetup = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `DJ Commands that are set can only be used by users who have the role set as DJ : ${role}.\n\nAre you sure you want to continue?`
+          `DJ Commands that are set can only be used by users who have the role set as DJ : ${role}.\n\nAre you sure you want to continue?`,
         )
         .setTitle("DJ System Configuration");
       const row = new ActionRowBuilder().addComponents(
@@ -47,7 +47,10 @@ module.exports = {
           .setCustomId("confirm")
           .setLabel("Confirm")
           .setStyle(3),
-        new ButtonBuilder().setCustomId("cancel").setLabel("Cancel").setStyle(4)
+        new ButtonBuilder()
+          .setCustomId("cancel")
+          .setLabel("Cancel")
+          .setStyle(4),
       );
       const disabledrow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -59,13 +62,13 @@ module.exports = {
           .setCustomId("cancel")
           .setLabel("Cancel")
           .setStyle(4)
-          .setDisabled(true)
+          .setDisabled(true),
       );
 
       const success = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `${role} is now set as DJ role.\n\nBy default following commands are set to DJ : \`volume\`, \`skip\`, \`seek\`, \`disconnect\`, \`remove\`, \`removedupes\`, \`clear-queue\`, \`shuffle\`, \`pause\`, \`resume\`, \`previous\`, \`jump\`, \`autoplay\`, \`loop\`.\n\nTo customize the list of DJ commands, kindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.\n\n*Please note that DJ command restrictions only applies to servers with an active Server Premium Plan*`
+          `${role} is now set as DJ role.\n\nBy default following commands are set to DJ : \`volume\`, \`skip\`, \`seek\`, \`disconnect\`, \`remove\`, \`removedupes\`, \`clear-queue\`, \`shuffle\`, \`pause\`, \`resume\`, \`previous\`, \`jump\`, \`autoplay\`, \`loop\`.\n\nTo customize the list of DJ commands, kindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.\n\n*Please note that DJ command restrictions only applies to servers with an active Server Premium Plan*`,
         )
         .setTitle("DJ Setup Successfull");
 
@@ -88,20 +91,25 @@ module.exports = {
               new EmbedBuilder()
                 .setColor("#2f3136")
                 .setDescription(
-                  `<:huh:897560243624640563>⠀|⠀That command wasnt for you`
+                  `<:huh:897560243624640563>⠀|⠀That command wasnt for you`,
                 ),
             ],
             ephemeral: true,
           });
         if (value === "confirm") {
           await djUpdate(interaction.guild.id, role.id);
-          await logIfRequired(interaction.guild.id , interaction.guild.ownerId, "djSettingsUpdateLogs addRole" , {
-            guildName : interaction.guild.name,
-            guildIcon : interaction.guild.iconURL(),
-            guildID : interaction.guild.id,
-            djRole : role.id,
-            userID : interaction.user.id
-          });
+          await logIfRequired(
+            interaction.guild.id,
+            interaction.guild.ownerId,
+            "djSettingsUpdateLogs addRole",
+            {
+              guildName: interaction.guild.name,
+              guildIcon: interaction.guild.iconURL(),
+              guildID: interaction.guild.id,
+              djRole: role.id,
+              userID: interaction.user.id,
+            },
+          );
           collected.editReply({ embeds: [success], components: [] });
         } else if (value === "cancel") {
           djSetup.setTitle("Setup Cancelled");
@@ -112,7 +120,7 @@ module.exports = {
               ephemeral: false,
             })
             .then((message) =>
-              setTimeout(() => message.delete().catch(console.error), 20000)
+              setTimeout(() => message.delete().catch(console.error), 20000),
             );
         }
       });
@@ -122,7 +130,7 @@ module.exports = {
           interaction
             .editReply({ embeds: [djSetup], components: [disabledrow] })
             .then((message) =>
-              setTimeout(() => message.delete().catch(console.error), 20000)
+              setTimeout(() => message.delete().catch(console.error), 20000),
             );
         }
       });
@@ -132,7 +140,7 @@ module.exports = {
           const djSetup = new EmbedBuilder()
             .setColor("#2f3136")
             .setDescription(
-              `DJ Commands that are set can only be used by users who have the role set as DJ : ${role}.\n\nAre you sure you want to add ${role} as DJ role and continue?`
+              `DJ Commands that are set can only be used by users who have the role set as DJ : ${role}.\n\nAre you sure you want to add ${role} as DJ role and continue?`,
             )
             .setTitle("DJ System Configuration");
           const row = new ActionRowBuilder().addComponents(
@@ -143,7 +151,7 @@ module.exports = {
             new ButtonBuilder()
               .setCustomId("cancel")
               .setLabel("Cancel")
-              .setStyle(4)
+              .setStyle(4),
           );
           const disabledrow = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -155,13 +163,13 @@ module.exports = {
               .setCustomId("cancel")
               .setLabel("Cancel")
               .setStyle(4)
-              .setDisabled(true)
+              .setDisabled(true),
           );
 
           const success = new EmbedBuilder()
             .setColor("#2f3136")
             .setDescription(
-              `${role} is now set as DJ role.\n\nKindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.`
+              `${role} is now set as DJ role.\n\nKindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.`,
             )
             .setTitle("DJ Configuration Successfull");
 
@@ -184,20 +192,25 @@ module.exports = {
                   new EmbedBuilder()
                     .setColor("#2f3136")
                     .setDescription(
-                      `<:huh:897560243624640563>⠀|⠀That command wasnt for you`
+                      `<:huh:897560243624640563>⠀|⠀That command wasnt for you`,
                     ),
                 ],
                 ephemeral: true,
               });
             if (value === "confirm") {
               await djAddRole(interaction.guild.id, role.id);
-              await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "djSettingsUpdateLogs addRole" , {
-                guildName : interaction.guild.name,
-                guildIcon : interaction.guild.iconURL(),
-                guildID : interaction.guild.id,
-                djRole : role.id,
-                userID : interaction.user.id
-              });
+              await logIfRequired(
+                interaction.guild.id,
+                interaction.guild.ownerId,
+                "djSettingsUpdateLogs addRole",
+                {
+                  guildName: interaction.guild.name,
+                  guildIcon: interaction.guild.iconURL(),
+                  guildID: interaction.guild.id,
+                  djRole: role.id,
+                  userID: interaction.user.id,
+                },
+              );
               collected.editReply({ embeds: [success], components: [] });
             } else if (value === "cancel") {
               djSetup.setTitle("Setup Cancelled");
@@ -208,7 +221,10 @@ module.exports = {
                   ephemeral: false,
                 })
                 .then((message) =>
-                  setTimeout(() => message.delete().catch(console.error), 20000)
+                  setTimeout(
+                    () => message.delete().catch(console.error),
+                    20000,
+                  ),
                 );
             }
           });
@@ -218,7 +234,10 @@ module.exports = {
               interaction
                 .editReply({ embeds: [djSetup], components: [disabledrow] })
                 .then((message) =>
-                  setTimeout(() => message.delete().catch(console.error), 20000)
+                  setTimeout(
+                    () => message.delete().catch(console.error),
+                    20000,
+                  ),
                 );
             }
           });
@@ -226,7 +245,7 @@ module.exports = {
           const djSetup = new EmbedBuilder()
             .setColor("#2f3136")
             .setDescription(
-              `DJ Commands that are set can only be used by users who have the role set as DJ : ${role}. Currently DJ System is \`Disabled\`.\n\nAre you sure you want to add ${role} as DJ role and Enable the DJ System?`
+              `DJ Commands that are set can only be used by users who have the role set as DJ : ${role}. Currently DJ System is \`Disabled\`.\n\nAre you sure you want to add ${role} as DJ role and Enable the DJ System?`,
             )
             .setTitle("DJ System Configuration");
           const row = new ActionRowBuilder().addComponents(
@@ -237,7 +256,7 @@ module.exports = {
             new ButtonBuilder()
               .setCustomId("cancel")
               .setLabel("Cancel")
-              .setStyle(4)
+              .setStyle(4),
           );
           const disabledrow = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -249,13 +268,13 @@ module.exports = {
               .setCustomId("cancel")
               .setLabel("Cancel")
               .setStyle(4)
-              .setDisabled(true)
+              .setDisabled(true),
           );
 
           const success = new EmbedBuilder()
             .setColor("#2f3136")
             .setDescription(
-              `${role} is now set as DJ role.\n\nKindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.`
+              `${role} is now set as DJ role.\n\nKindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${interaction.guild.id}/settings)** and modify the DJ commands section.`,
             )
             .setTitle("DJ Configuration Successfull");
 
@@ -278,20 +297,25 @@ module.exports = {
                   new EmbedBuilder()
                     .setColor("#2f3136")
                     .setDescription(
-                      `<:huh:897560243624640563>⠀|⠀That command wasnt for you`
+                      `<:huh:897560243624640563>⠀|⠀That command wasnt for you`,
                     ),
                 ],
                 ephemeral: true,
               });
             if (value === "confirm") {
               await djAddRole(interaction.guild.id, role.id);
-              await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "djSettingsUpdateLogs addRole" , {
-                guildName : interaction.guild.name,
-                guildIcon : interaction.guild.iconURL(),
-                guildID : interaction.guild.id,
-                djRole : role.id,
-                userID : interaction.user.id
-              });
+              await logIfRequired(
+                interaction.guild.id,
+                interaction.guild.ownerId,
+                "djSettingsUpdateLogs addRole",
+                {
+                  guildName: interaction.guild.name,
+                  guildIcon: interaction.guild.iconURL(),
+                  guildID: interaction.guild.id,
+                  djRole: role.id,
+                  userID: interaction.user.id,
+                },
+              );
               collected.editReply({ embeds: [success], components: [] });
             } else if (value === "cancel") {
               djSetup.setTitle("Setup Cancelled");
@@ -302,7 +326,10 @@ module.exports = {
                   ephemeral: false,
                 })
                 .then((message) =>
-                  setTimeout(() => message.delete().catch(console.error), 20000)
+                  setTimeout(
+                    () => message.delete().catch(console.error),
+                    20000,
+                  ),
                 );
             }
           });
@@ -312,7 +339,10 @@ module.exports = {
               interaction
                 .editReply({ embeds: [djSetup], components: [disabledrow] })
                 .then((message) =>
-                  setTimeout(() => message.delete().catch(console.error), 20000)
+                  setTimeout(
+                    () => message.delete().catch(console.error),
+                    20000,
+                  ),
                 );
             }
           });
@@ -322,7 +352,7 @@ module.exports = {
         const djSetup = new EmbedBuilder()
           .setColor("#2f3136")
           .setDescription(
-            `${role} is already set as a DJ Role.\n\nAre you sure you want to remove ${role} from DJ roles and continue?`
+            `${role} is already set as a DJ Role.\n\nAre you sure you want to remove ${role} from DJ roles and continue?`,
           )
           .setTitle("DJ System Configuration");
         const row = new ActionRowBuilder().addComponents(
@@ -333,7 +363,7 @@ module.exports = {
           new ButtonBuilder()
             .setCustomId("cancel")
             .setLabel("Cancel")
-            .setStyle(4)
+            .setStyle(4),
         );
         const disabledrow = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
@@ -345,7 +375,7 @@ module.exports = {
             .setCustomId("cancel")
             .setLabel("Cancel")
             .setStyle(4)
-            .setDisabled(true)
+            .setDisabled(true),
         );
 
         const success = new EmbedBuilder()
@@ -355,7 +385,7 @@ module.exports = {
               data.isEnabled ? `\`Enabled\`` : `\`Disabled\``
             }\n\nKindly navigate to the **[server dashboard](https://dashboard.beatsbot.in/servers/${
               interaction.guild.id
-            }/settings)** and modify the DJ commands section.`
+            }/settings)** and modify the DJ commands section.`,
           )
           .setTitle("DJ Configuration Successfull");
 
@@ -378,20 +408,25 @@ module.exports = {
                 new EmbedBuilder()
                   .setColor("#2f3136")
                   .setDescription(
-                    `<:huh:897560243624640563>⠀|⠀That command wasn't for you`
+                    `<:huh:897560243624640563>⠀|⠀That command wasn't for you`,
                   ),
               ],
               ephemeral: true,
             });
           if (value === "confirm") {
             await djRemoveRole(interaction.guild.id, role.id);
-            await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "djSettingsUpdateLogs removeRole" , {
-              guildName : interaction.guild.name,
-              guildIcon : interaction.guild.iconURL(),
-              guildID : interaction.guild.id,
-              djRole : role.id,
-              userID : interaction.user.id
-            });
+            await logIfRequired(
+              interaction.guild.id,
+              interaction.guild.ownerId,
+              "djSettingsUpdateLogs removeRole",
+              {
+                guildName: interaction.guild.name,
+                guildIcon: interaction.guild.iconURL(),
+                guildID: interaction.guild.id,
+                djRole: role.id,
+                userID: interaction.user.id,
+              },
+            );
             collected.editReply({ embeds: [success], components: [] });
           } else if (value === "cancel") {
             djSetup.setTitle("Setup Cancelled");
@@ -402,7 +437,7 @@ module.exports = {
                 ephemeral: false,
               })
               .then((message) =>
-                setTimeout(() => message.delete().catch(console.error), 20000)
+                setTimeout(() => message.delete().catch(console.error), 20000),
               );
           }
         });
@@ -413,7 +448,7 @@ module.exports = {
             interaction
               .editReply({ embeds: [djSetup], components: [disabledrow] })
               .then((message) =>
-                setTimeout(() => message.delete().catch(console.error), 20000)
+                setTimeout(() => message.delete().catch(console.error), 20000),
               );
           }
         });

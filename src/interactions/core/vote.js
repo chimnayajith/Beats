@@ -12,11 +12,9 @@ module.exports = {
     const aboutEmbed = new EmbedBuilder()
       .setColor("#2f3136")
       .setTitle("Upvote Beats")
-      .setThumbnail(
-        "https://cdn.beatsbot.in/Beats.png"
-      )
+      .setThumbnail("https://cdn.beatsbot.in/Beats.png")
       .setDescription(
-        "Show your support by helping Beats grow by upvoting in the following sites.\n"
+        "Show your support by helping Beats grow by upvoting in the following sites.\n",
       )
       .setFooter({ text: "Thank you and have a great day!" });
 
@@ -25,7 +23,7 @@ module.exports = {
         .setURL("https://discordbotlist.com/bots/beats-9741/upvote")
         .setLabel("dbl.com")
         .setEmoji("<:dbl:906810567694647336>")
-        .setStyle(5),      
+        .setStyle(5),
       new ButtonBuilder()
         .setURL("https://top.gg/bot/886801342239211522/vote")
         .setLabel("top.gg")
@@ -35,7 +33,7 @@ module.exports = {
         .setURL("https://discords.com/bots/bot/886801342239211522/vote")
         .setLabel("Bots for Discord")
         .setEmoji("<:discords:906810883202756628>")
-        .setStyle(5)
+        .setStyle(5),
     );
     interaction.reply({ embeds: [aboutEmbed], components: [invite] });
   },

@@ -26,7 +26,7 @@ module.exports = {
           option
             .setName("user")
             .setDescription("user to add restriction")
-            .setRequired(true)
+            .setRequired(true),
         )
         .addStringOption((option) =>
           option
@@ -39,15 +39,15 @@ module.exports = {
               { name: "10 minutes", value: `10 min` },
               { name: "1 hour", value: `1 hour` },
               { name: "1 day", value: `1 day` },
-              { name: "1 week", value: `7 days` }
-            )
+              { name: "1 week", value: `7 days` },
+            ),
         )
         .addStringOption((option) =>
           option
             .setName("reason")
             .setDescription("Reason the user is timeouted")
-            .setRequired(false)
-        )
+            .setRequired(false),
+        ),
     )
     .addSubcommand((subCommand) =>
       subCommand
@@ -57,8 +57,8 @@ module.exports = {
           option
             .setName("user")
             .setDescription("user to remove restriction from")
-            .setRequired(true)
-        )
+            .setRequired(true),
+        ),
     ),
   voiceChannel: false,
   vote: true,
@@ -87,7 +87,7 @@ module.exports = {
       const yourself = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          "**<:failed:1131489226496671744>⠀|⠀You cannot restrict yourself!**"
+          "**<:failed:1131489226496671744>⠀|⠀You cannot restrict yourself!**",
         );
       if (restrictUser === interaction.member)
         return interaction.reply({ embeds: [yourself], ephemeral: true });
@@ -95,11 +95,11 @@ module.exports = {
       const cannotRestrict = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          "**<:failed:1131489226496671744>  ⠀|⠀Cannot rsestrict a user with a higher role than you!**"
+          "**<:failed:1131489226496671744>  ⠀|⠀Cannot rsestrict a user with a higher role than you!**",
         );
       if (
         restrictUser.roles.highest.comparePositionTo(
-          interaction.member.roles.highest
+          interaction.member.roles.highest,
         ) > 0
       )
         return interaction.reply({ embeds: [cannotRestrict], ephemeral: true });
@@ -108,7 +108,7 @@ module.exports = {
       const alreadyRestricted = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          "**<:failed:1131489226496671744>⠀|⠀User is already restricted!**"
+          "**<:failed:1131489226496671744>⠀|⠀User is already restricted!**",
         );
       if (check)
         return interaction.reply({
@@ -131,14 +131,17 @@ module.exports = {
           {
             name: `<:beats_right:1133048273704337558> Reason:`,
             value: `\`${reason}\``,
-          }
+          },
         );
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId("confirm")
           .setLabel("Confirm")
           .setStyle(3),
-        new ButtonBuilder().setCustomId("cancel").setLabel("Cancel").setStyle(4)
+        new ButtonBuilder()
+          .setCustomId("cancel")
+          .setLabel("Cancel")
+          .setStyle(4),
       );
       const disabledrow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -150,7 +153,7 @@ module.exports = {
           .setCustomId("cancel")
           .setLabel("Cancel")
           .setStyle(4)
-          .setDisabled(true)
+          .setDisabled(true),
       );
 
       const msg = await interaction.reply({
@@ -161,7 +164,7 @@ module.exports = {
       const success = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `<:tick1:942463946219208754>⠀|⠀<@${user.id}> has been restricted from using Beats commands for \`${durationoption}\` by <@${interaction.user.id}>`
+          `<:tick1:942463946219208754>⠀|⠀<@${user.id}> has been restricted from using Beats commands for \`${durationoption}\` by <@${interaction.user.id}>`,
         );
 
       const collector = msg.createMessageComponentCollector({
@@ -182,7 +185,7 @@ module.exports = {
             user.id,
             interaction.user.id,
             duration,
-            reason
+            reason,
           );
           await logIfRequired(
             interaction.guild.id,
@@ -192,16 +195,16 @@ module.exports = {
               guildName: interaction.guild.name,
               guildID: interaction.guild.id,
               guildIcon: interaction.guild.iconURL(),
-              restrictedUserId : user.id,
-              moderator : interaction.user.id,
-              duration : durationoption , 
-              reason : reason
-            }
+              restrictedUserId: user.id,
+              moderator: interaction.user.id,
+              duration: durationoption,
+              reason: reason,
+            },
           );
           collected
             .editReply({ embeds: [success], components: [] })
             .then((message) =>
-              setTimeout(() => message.delete().catch(console.error), 20000)
+              setTimeout(() => message.delete().catch(console.error), 20000),
             );
         } else if (value === "cancel") {
           confirmation.setTitle("Restriction Cancelled");
@@ -212,7 +215,7 @@ module.exports = {
               ephemeral: false,
             })
             .then((message) =>
-              setTimeout(() => message.delete().catch(console.error), 20000)
+              setTimeout(() => message.delete().catch(console.error), 20000),
             );
         }
       });
@@ -223,7 +226,7 @@ module.exports = {
           interaction
             .editReply({ embeds: [confirmation], components: [disabledrow] })
             .then((message) =>
-              setTimeout(() => message.delete().catch(console.error), 20000)
+              setTimeout(() => message.delete().catch(console.error), 20000),
             );
         }
       });
@@ -231,13 +234,13 @@ module.exports = {
       const user = interaction.options.getUser("user");
       const isUserRestricted = await checkRestricted(
         interaction.guild.id,
-        user.id
+        user.id,
       );
 
       const userNotRestricted = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `<:failed:1131489226496671744>⠀|⠀User is not restricted!`
+          `<:failed:1131489226496671744>⠀|⠀User is not restricted!`,
         );
       if (!isUserRestricted)
         return interaction.reply({
@@ -254,19 +257,19 @@ module.exports = {
           guildName: interaction.guild.name,
           guildID: interaction.guild.id,
           guildIcon: interaction.guild.iconURL(),
-          restrictedUserId : user.id,
-          moderator : interaction.user.id,
-        }
+          restrictedUserId: user.id,
+          moderator: interaction.user.id,
+        },
       );
       const unRestricted = new EmbedBuilder()
         .setColor("#2f3136")
         .setDescription(
-          `<:tick1:942463946219208754>⠀|⠀Restriction for ${user} has been removed!`
+          `<:tick1:942463946219208754>⠀|⠀Restriction for ${user} has been removed!`,
         );
       interaction
         .reply({ embeds: [unRestricted] })
         .then((message) =>
-          setTimeout(() => message.delete().catch(console.error), 20000)
+          setTimeout(() => message.delete().catch(console.error), 20000),
         );
     }
   },

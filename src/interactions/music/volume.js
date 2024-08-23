@@ -11,10 +11,10 @@ module.exports = {
       option
         .setName("volume")
         .setDescription("Volume of track [1 - 200]")
-        .setRequired(false)
+        .setRequired(false),
     ),
   voiceChannel: true,
-  vote : true,
+  vote: true,
   category: "Music",
   utilisation: "/volume <1-200>",
 
@@ -22,25 +22,42 @@ module.exports = {
     const volume = interaction.options.get("volume");
 
     const queue = player.nodes.get(interaction.guild.id);
-    const noMusic = new EmbedBuilder().setColor("#2f3136").setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
+    const noMusic = new EmbedBuilder()
+      .setColor("#2f3136")
+      .setDescription(`**:mute: ⠀|⠀ No music currently playing**`);
 
-    if (!queue) return interaction.reply({ embeds: [noMusic], ephemeral: true });
+    if (!queue)
+      return interaction.reply({ embeds: [noMusic], ephemeral: true });
 
     const currentVolume = new EmbedBuilder()
       .setColor("#2f3136")
       .setTitle(`**:loud_sound: ⠀|⠀ Current volume :  ${queue.node.volume}%**`)
       .setDescription(
-        `*To change the volume enter a valid number between **1** and **${maxVol}***`
+        `*To change the volume enter a valid number between **1** and **${maxVol}***`,
       );
     if (!volume) {
       interaction.reply({ embeds: [currentVolume], ephemeral: true });
     } else {
       const vol = parseInt(volume.value);
-      
-      const alreadySet = new EmbedBuilder().setColor("#2f3136").setDescription(`:loud_sound: ⠀|⠀ Volume already set at **${queue.node.volume}**`);
-      const invalidVolume = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Enter a valid number between *1* and *200* **`);
-      const volumeSuccess = new EmbedBuilder().setColor("#2f3136").setDescription(`<a:tick:889018326255288360> ⠀|⠀ Volume set to **${vol}%**`);
-      const errorEmbed = new EmbedBuilder().setColor("#2f3136").setDescription(`**:x: ⠀|⠀ Something went wrong..Try Again**`);
+
+      const alreadySet = new EmbedBuilder()
+        .setColor("#2f3136")
+        .setDescription(
+          `:loud_sound: ⠀|⠀ Volume already set at **${queue.node.volume}**`,
+        );
+      const invalidVolume = new EmbedBuilder()
+        .setColor("#2f3136")
+        .setDescription(
+          `**:x: ⠀|⠀ Enter a valid number between *1* and *200* **`,
+        );
+      const volumeSuccess = new EmbedBuilder()
+        .setColor("#2f3136")
+        .setDescription(
+          `<a:tick:889018326255288360> ⠀|⠀ Volume set to **${vol}%**`,
+        );
+      const errorEmbed = new EmbedBuilder()
+        .setColor("#2f3136")
+        .setDescription(`**:x: ⠀|⠀ Something went wrong..Try Again**`);
 
       if (queue.node.volume === vol)
         return interaction.reply({ embeds: [alreadySet], ephemeral: true });
@@ -49,17 +66,28 @@ module.exports = {
         return interaction.reply({ embeds: [invalidVolume], ephemeral: true });
 
       const success = queue.node.setVolume(vol);
-      await logIfRequired(interaction.guild.id ,interaction.guild.ownerId, "controlLogs" , {
-        guildName: interaction.guild.name,
-        guildID: interaction.guild.id,
-        guildIcon: interaction.guild.iconURL(),
-        command : "volume",
-        userID : interaction.user.id ,
-        textChannel : interaction.channel.id
-      });
-      return interaction.reply(
-        success ? { embeds: [volumeSuccess] } : { embeds: [errorEmbed], ephemeral: true }
-      ).then((message) => setTimeout(() => message.delete().catch(console.error), 20000));
+      await logIfRequired(
+        interaction.guild.id,
+        interaction.guild.ownerId,
+        "controlLogs",
+        {
+          guildName: interaction.guild.name,
+          guildID: interaction.guild.id,
+          guildIcon: interaction.guild.iconURL(),
+          command: "volume",
+          userID: interaction.user.id,
+          textChannel: interaction.channel.id,
+        },
+      );
+      return interaction
+        .reply(
+          success
+            ? { embeds: [volumeSuccess] }
+            : { embeds: [errorEmbed], ephemeral: true },
+        )
+        .then((message) =>
+          setTimeout(() => message.delete().catch(console.error), 20000),
+        );
     }
   },
 };

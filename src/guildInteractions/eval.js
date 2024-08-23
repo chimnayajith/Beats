@@ -9,7 +9,7 @@ module.exports = {
       option
         .setName("code")
         .setDescription("code block to evaluate")
-        .setRequired(true)
+        .setRequired(true),
     ),
   category: "Staff",
   utilisation: "/eval <code>",
@@ -20,7 +20,7 @@ module.exports = {
 
     try {
       let evaled = await eval(code);
-
+      let output;
       if (evaled.constructor.name === `Promise`) {
         output = `📤 Output (Promise)`;
       } else {
@@ -29,16 +29,16 @@ module.exports = {
       if (evaled.length > 800) {
         evaled = evaled.substring(0, 800) + `...`;
       }
-      embed.addFields({name : `📥 Input`, value : `\`\`\`\n${code}\n\`\`\``});
-      embed.addFields({name : output, value : `\`\`\`js\n${evaled}\n\`\`\``});
+      embed.addFields({ name: `📥 Input`, value: `\`\`\`\n${code}\n\`\`\`` });
+      embed.addFields({ name: output, value: `\`\`\`js\n${evaled}\n\`\`\`` });
       embed.setColor("Random");
-      embed.addFields({name : `Status`, value : `Success`});
+      embed.addFields({ name: `Status`, value: `Success` });
       return interaction.reply({ embeds: [embed] });
     } catch (e) {
       console.log(e.stack);
-      embed.addFields({name : `📥 Input`, value : `\`\`\`\n${code}\n\`\`\``});
-      embed.addFields({name : `📤 Output`, value : `\`\`\`js\n${e}\n\`\`\``});
-      embed.addFields({name : `Status`, value : `Failed`});
+      embed.addFields({ name: `📥 Input`, value: `\`\`\`\n${code}\n\`\`\`` });
+      embed.addFields({ name: `📤 Output`, value: `\`\`\`js\n${e}\n\`\`\`` });
+      embed.addFields({ name: `Status`, value: `Failed` });
       embed.setColor("Random");
       return interaction.reply({ embeds: [embed] });
     }
